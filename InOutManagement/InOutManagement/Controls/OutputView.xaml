@@ -18,7 +18,7 @@
         <StackPanel Orientation="Vertical">
             <StackPanel Margin="30" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
                 <TextBlock Text="类别"  Margin="10,0" FontFamily="Kristen ITC" FontSize="18" FontWeight="Bold" Foreground="#ff4c00" />
-                <ComboBox IsEditable="False" Style="{DynamicResource ComboBoxStyle}"  Name="Supplier" Margin="10,0" VerticalAlignment="Center" HorizontalAlignment="Center" Width="200" FontFamily="Kristen ITC" FontSize="18" FontWeight="Bold" Foreground="#ff4c00">
+                <ComboBox IsEditable="False" Style="{DynamicResource ComboBoxStyle}"  Name="Supplier" Margin="10,0" VerticalAlignment="Center" HorizontalAlignment="Center" Width="200" FontFamily="Kristen ITC" FontSize="18" FontWeight="Bold" Foreground="#ff4c00" SelectionChanged="Supplier_SelectionChanged">
                     <ComboBoxItem>甲供</ComboBoxItem>
                     <ComboBoxItem>乙供</ComboBoxItem>
                 </ComboBox>
@@ -31,10 +31,14 @@
                 <TextBlock Text="规格"  FontFamily="Kristen ITC" Margin="10,0" FontSize="18" FontWeight="Bold" Foreground="#ff4c00" />
                 <ComboBox IsEditable="False" DropDownOpened="Model_DropDownOpened" Style="{DynamicResource ComboBoxStyle}" Name="Model" Margin="10,0" VerticalAlignment="Center" HorizontalAlignment="Center" Width="200" FontFamily="Kristen ITC" FontSize="18" FontWeight="Bold" Foreground="#ff4c00"/>
             </StackPanel>
-            <StackPanel Margin="30" Orientation="Horizontal"  VerticalAlignment="Center" HorizontalAlignment="Center">
-                <TextBlock Text="数量" Margin="10,0" FontFamily="Kristen ITC" FontSize="18" FontWeight="Bold" Foreground="#ff4c00" />
+            <StackPanel Margin="30" Orientation="Horizontal"  VerticalAlignment="Center" HorizontalAlignment="Left">
+                <TextBlock Margin="287,0,10,0" Text="数量" FontFamily="Kristen ITC" FontSize="18" FontWeight="Bold" Foreground="#ff4c00" />
                 <TextBox TextChanged="Count_TextChanged" Name="Count" Margin="10,0" VerticalAlignment="Center" HorizontalAlignment="Center" Width="200" FontFamily="Kristen ITC" FontSize="18" FontWeight="Bold" Foreground="#ff4c00"/>
+                <TextBlock  Text="{Binding MaxCountContent}" Visibility="{Binding MaxCountVisiblity}" FontFamily="Kristen ITC" FontSize="18" FontWeight="Bold" Foreground="#ff4c00" />
             </StackPanel>
+            <!--<StackPanel Visibility="{Binding MaxCountVisiblity}" Margin="30,0" Orientation="Horizontal"  VerticalAlignment="Center" HorizontalAlignment="Center">
+                <TextBlock  Text="{Binding MaxCountContent}" FontFamily="Kristen ITC" FontSize="18" FontWeight="Bold" Foreground="#ff4c00" />
+            </StackPanel>-->
             <StackPanel Orientation="Horizontal" Margin="30" VerticalAlignment="Center" HorizontalAlignment="Center">
                 <TextBlock Text="票据" Margin="10,0"  FontFamily="Kristen ITC" FontSize="18" FontWeight="Bold" Foreground="#ff4c00" />
                 <TextBox Name="BillArchive" Margin="10,0" VerticalAlignment="Center" HorizontalAlignment="Center"  Width="200" FontFamily="Kristen ITC" FontSize="18" FontWeight="Bold" Foreground="#ff4c00"/>

@@ -9,6 +9,7 @@
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
+    using System.Timers;
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Media;
@@ -56,11 +57,45 @@
 
         #endregion
 
+        #region MaxCountVisiblity
+
+        public Visibility MaxCountVisiblity
+        {
+            get
+            {
+                return (String.IsNullOrEmpty(this.Supplier.Text) == false) &&
+                       (String.IsNullOrEmpty(this.Material.Text) == false) &&
+                       (String.IsNullOrEmpty(this.Model.Text) == false) ?
+                       Visibility.Visible :
+                       Visibility.Hidden;
+
+            }
+            set
+            {
+                this.OnPropertyChanged("MaxCountVisiblity");
+            }
+        }
+
+        public String MaxCountContent
+        {
+            get
+            {
+                return "但前库存：" + this.CalculateCount().ToString();
+            }
+            set
+            {
+                this.OnPropertyChanged("MaxCountContent");
+            }
+        }
+
+
         #endregion
 
+        #endregion
         private void Material_DropDownOpened(object sender, EventArgs e)
         {
-            var tempText = this.Material.Text;
+            var tempText = this.materialText;
+            this.isMaterialClear = true;
             this.Material.Items.Clear();
             var input = new Input()
             {
@@ -80,7 +115,9 @@
                     this.Material.Items.Add(query.Name);
                 }
             }
+            this.materialText = tempText;
             this.Material.Text = tempText;
+            this.isMaterialClear = false;
         }
 
         private void Model_DropDownOpened(object sender, EventArgs e)
@@ -193,25 +230,54 @@
         private Int32 CalculateCount()
         {
             Int32 result = 0;
-            var materialQuery = this.sqlHelper.Query<Material>(new Material()
+            if (String.IsNullOrEmpty(this.Model.Text) == false)
             {
-                Name = this.Material.Text,
-                Model = this.Model.Text,
-            });
-            foreach (var material in materialQuery)
-            {
-                var input = new Input()
+                var inputIdentities = this.ObtainInputIdentity();
+                foreach (var identity in inputIdentities)
                 {
-                    Supplier = this.Supplier.Text,
-                    Material = material.Identity,
-                };
-                var queryResult = this.sqlHelper.Query<Input>(input);
-                foreach (var item in queryResult)
-                {
-                    result += item.Count;
+                    var tempIndentity = identity;
+                    result += this.CalculateInputLaveCount(ref tempIndentity);
                 }
             }
             return result;
+        }
+
+        private void Supplier_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            this.Material.Text = String.Empty;
+            this.Model.Text = String.Empty;
+        }
+
+        private void Initial()
+        {
+            this.SetMaterialEvent();
+            this.timer.Elapsed += delegate
+            {
+                this.MaxCountVisiblity = Visibility.Hidden;
+                this.MaxCountContent = String.Empty;
+            };
+            this.timer.Start();
+        }
+
+        private void SetMaterialEvent()
+        {
+            var materialContent = (TextBox)this.Material.Template.FindName("ComboBoxContent", this.Material);
+            if (materialContent != null)
+            {
+                materialContent.TextChanged += delegate (object sender, TextChangedEventArgs e)
+                {
+                    var text = (TextBox)sender;
+                    if (this.isMaterialClear == false)
+                    {
+                        if (this.materialText != text.Text)
+                        {
+                            this.materialText = text.Text;
+                            this.Model.Text = String.Empty;
+                        }
+                    }
+                    this.isMaterialClear = false;
+                };
+            }
         }
 
         #region NotifyEnevt
@@ -232,6 +298,9 @@
         #region private 
 
         private SQLHelper sqlHelper = SQLHelper.GetInstance();
+        private Boolean isMaterialClear = false;
+        private String materialText = String.Empty;
+        private Timer timer = new Timer(100);
 
         #endregion
     }

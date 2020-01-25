@@ -204,7 +204,7 @@ namespace InOutManagement.Windows
 
         #region 控制页面显示
 
-        private Visibility queryVisibility = Visibility.Hidden;
+        private Visibility queryVisibility = Visibility.Visible;
         public Visibility QueryVisibility
         {
             get

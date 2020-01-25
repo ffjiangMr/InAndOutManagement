@@ -23,6 +23,15 @@ namespace InOutManagement.Controls
         {
             InitializeComponent();
             this.DataContext = this;
+            this.Loaded += delegate
+            {
+                this.Initial();
+            };
+            this.Unloaded += delegate
+            {
+                this.timer?.Stop();
+                this.timer?.Dispose();
+            };
         }
     }
 }

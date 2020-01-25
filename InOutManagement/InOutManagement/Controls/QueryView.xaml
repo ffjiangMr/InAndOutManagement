@@ -34,12 +34,12 @@
             </StackPanel>
             <StackPanel Orientation="Horizontal" Grid.Column="1">
                 <ComboBox Style="{DynamicResource ComboBoxStyle}" IsEditable="False"  Name="Supplier" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="10,20" Width="70" FontFamily="Kristen ITC" FontSize="18" FontWeight="Bold" Foreground="#ff4c00" >
-                    <ComboBoxItem>甲供</ComboBoxItem>
+                    <ComboBoxItem></ComboBoxItem>
                     <ComboBoxItem>甲供</ComboBoxItem>
                     <ComboBoxItem>乙供</ComboBoxItem>
                 </ComboBox>
                 <ComboBox Style="{DynamicResource ComboBoxStyle}" IsEditable="False"  Name="Status" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="10,20" Width="70" FontFamily="Kristen ITC" FontSize="18" FontWeight="Bold" Foreground="#ff4c00" >
-                    <ComboBoxItem>甲供</ComboBoxItem>
+                    <ComboBoxItem></ComboBoxItem>
                     <ComboBoxItem>入库</ComboBoxItem>
                     <ComboBoxItem>出库</ComboBoxItem>
                 </ComboBox>
@@ -69,7 +69,7 @@
             <Grid Grid.Column="6" Name="column6"/>
             <Grid Grid.Column="7" Name="column7"/>
             <Grid Grid.Column="8" Name="column8"/>
-            <ListView VerticalAlignment="Top" HorizontalAlignment="Center" BorderThickness="0" Grid.ColumnSpan="9" FontFamily="Kristen ITC" Background="Transparent" FontSize="26" FontWeight="Bold" Foreground="#ff4c00" ItemsSource="{Binding ViewList}">
+            <ListView VerticalAlignment="Top" HorizontalAlignment="Center" BorderThickness="0" Grid.ColumnSpan="9" FontFamily="Kristen ITC" Background="Transparent" FontSize="26" FontWeight="Bold" Foreground="#ff4c00" ItemsSource="{Binding ViewList}" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
                 <ListView.View>
                     <GridView AllowsColumnReorder="True" >
                         <GridViewColumn Width="{Binding ElementName=column0,Path=ActualWidth}" Header="时间" DisplayMemberBinding="{Binding Date}"/>

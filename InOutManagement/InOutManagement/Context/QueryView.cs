@@ -35,19 +35,46 @@
             var queryResult = this.sqlHelper.Query<Query>(query);
             foreach (var item in queryResult)
             {
-                this.ViewList.Add(new Query()
+                if (this.FilterData(item) == false)
                 {
-                    BillArchive = item.BillArchive,
-                    Count = item.Count,
-                    Date = item.Date.Substring(0,10),
-                    Model = item.Model,
-                    Name = item.Name,
-                    Price = item.Price,
-                    Status = item.Status,
-                    Supplier = item.Supplier,
-                    Unit = item.Unit,
-                });
+                    this.ViewList.Add(new Query()
+                    {
+                        BillArchive = item.BillArchive,
+                        Count = item.Count,
+                        Date = item.Date.Substring(0, 10),
+                        Model = item.Model,
+                        Name = item.Name,
+                        Price = item.Price,
+                        Status = item.Status,
+                        Supplier = item.Supplier,
+                        Unit = item.Unit,
+                    });
+                }
             }
+        }
+
+        private Boolean FilterData(Query query)
+        {
+            Boolean result = false;
+            DateTime date;
+            if (DateTime.TryParse(query.Date.Substring(0, 10), out date))
+            {
+                if (this.StartDate.SelectedDate != null)
+                {
+                    if (date < this.StartDate.SelectedDate)
+                    {
+                        result = true;
+                    }
+                }
+                if (this.EndDate.SelectedDate != null)
+                {
+                    if (date > this.EndDate.SelectedDate)
+                    {
+                        result = true;
+                    }
+                }
+            }
+            return result;
         }
 
         private void EndDate_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
