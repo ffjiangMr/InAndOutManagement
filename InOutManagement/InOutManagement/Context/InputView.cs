@@ -21,6 +21,8 @@
     /// </summary>
     public partial class InputView : UserControl, INotifyPropertyChanged
     {
+        #region Binding Property
+
         #region Title
 
         private String title = "录入材料";
@@ -113,7 +115,11 @@
 
         public ObservableCollection<String> ModelList { get; set; } = new ObservableCollection<String>();
 
-        #endregion        
+        #endregion
+
+        #endregion
+
+        #region Notify Event 
 
         public void OnPropertyChanged(String propertyName)
         {
@@ -125,6 +131,8 @@
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
+
+        #endregion
 
         private void Material_DropDownOpened(object sender, EventArgs e)
         {
@@ -200,34 +208,12 @@
 
         private void Initial()
         {
-            var modelContent = (TextBox)this.Model.Template.FindName("ComboBoxContent", this.Model);
-            if (modelContent != null)
-            {
-                modelContent.TextChanged += delegate (object sender, TextChangedEventArgs e)
-                {
-                    var text = (TextBox)sender;
-                    if (this.isModelClear == false)
-                    {
-                        if (this.ModelText != text.Text)
-                        {
-                            this.ModelText = text.Text;
-                            this.Model_DropDownOpened(null, null);
-                        }
-                    }
-                    var material = new Material()
-                    {
-                        Name = this.MaterialText,
-                        Model = this.ModelText,
-                    };
-                    var queryList = sqlHelper.Query<Material>(material);
-                    if (queryList.Count > 0)
-                    {
-                        this.UntiContent = queryList[0].Unit;
-                    }
-                    text.SelectionStart = text.Text.Length;
-                    this.isModelClear = false;
-                };
-            }
+            this.SetMaterialEvent();
+            this.SetModelEvent();
+        }
+
+        private void SetMaterialEvent()
+        {
             var materialContent = (TextBox)this.Material.Template.FindName("ComboBoxContent", this.Material);
             if (materialContent != null)
             {
@@ -245,6 +231,43 @@
                     text.SelectionStart = text.Text.Length;
                     this.isMaterialClear = false;
                 };
+            }
+        }
+
+        private void SetModelEvent()
+        {
+            var modelContent = (TextBox)this.Model.Template.FindName("ComboBoxContent", this.Model);
+            if (modelContent != null)
+            {
+                modelContent.TextChanged += delegate (object sender, TextChangedEventArgs e)
+                {
+                    var text = (TextBox)sender;
+                    if (this.isModelClear == false)
+                    {
+                        if (this.ModelText != text.Text)
+                        {
+                            this.ModelText = text.Text;
+                            this.Model_DropDownOpened(null, null);
+                        }
+                    }
+                    this.SetCountText();
+                    text.SelectionStart = text.Text.Length;
+                    this.isModelClear = false;
+                };
+            }
+        }
+
+        private void SetCountText()
+        {
+            var material = new Material()
+            {
+                Name = this.MaterialText,
+                Model = this.ModelText,
+            };
+            var queryList = sqlHelper.Query<Material>(material);
+            if (queryList.Count > 0)
+            {
+                this.UntiContent = queryList[0].Unit;
             }
         }
 
@@ -279,7 +302,7 @@
                     Material = queryResult[0].Identity,
                     BillArchive = this.BillArchive.Text,
                     Count = Convert.ToInt32(this.Count.Text),
-                    InputDate = DateTime.Now.ToShortDateString(),
+                    InputDate = DateTime.Now.ToString("yyyy-MM-dd HH-mm-ss:ffffff"),
                     Price = Convert.ToDouble(this.Price.Text),
                     Supplier = this.Supplier.Text,
                 };
@@ -290,12 +313,16 @@
         private Boolean Validate()
         {
             //TODO
-            return false;    
+            return false;
         }
 
         #region private 
 
         private SQLHelper sqlHelper = SQLHelper.GetInstance();
+
+        /// 下拉框下拉获取数据，清空数据导致Text Changed触发
+        /// 在TextChanged 事件动态过滤触发下拉事件
+        /// 为防止无限递归，保证数据准确设置此控制
         private Boolean isMaterialClear = false;
         private Boolean isModelClear = false;
 

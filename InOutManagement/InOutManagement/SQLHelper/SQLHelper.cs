@@ -34,11 +34,6 @@
 
         #endregion
 
-        public void Query()
-        {
-            //TODO
-        }
-
         public Boolean Insert<T>(T entity)
         {
             Boolean result = false;
@@ -79,7 +74,7 @@
 
         public List<T> Query<T>(T entity, List<String> queryColumnList = null)
         {
-            Type type = entity.GetType();
+            Type type = typeof(T);
             using (var command = this.connect.CreateCommand())
             {
                 List<String> names = new List<String>();
@@ -107,12 +102,12 @@
                             " where " + condition.Remove(condition.Length - 4, 4) :
                             condition;
                 command.CommandText += condition;
-                this.AddParameters(command.Parameters, entity);
+                this.AddParameters<T>(command.Parameters, entity);
                 var reader = command.ExecuteReader();
                 return this.SetColumn<T>(queryColumnList ?? names, ref reader);
             }
         }
-
+      
         public void InsertInput(ref Input input)
         {
             //using (var transition = this.connect.BeginTransaction())
@@ -156,9 +151,9 @@
             }
         }
 
-        private void AddParameters(SQLiteParameterCollection paramCollection, Object entity)
+        private void AddParameters<T>(SQLiteParameterCollection paramCollection, T entity)
         {
-            Type type = entity.GetType();
+            Type type = typeof(T);
             var properties = type.GetProperties(BindingFlags.Public | BindingFlags.Instance);
             foreach (var property in properties)
             {
@@ -205,7 +200,7 @@
                 {
                     //释放托管资源
                 }
-                this.connect?.Close();
+                this.connect?.Dispose();
                 this.isDisposed = true;
             }
         }

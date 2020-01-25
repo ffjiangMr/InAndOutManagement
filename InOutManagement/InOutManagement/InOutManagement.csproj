@@ -81,7 +81,7 @@
       <DependentUpon>QueryView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Entity\Input.cs" />
-    <Compile Include="Entity\ListviewContent.cs" />
+    <Compile Include="Entity\Query.cs" />
     <Compile Include="Entity\Material.cs" />
     <Compile Include="Entity\Output.cs" />
     <Compile Include="Entity\Surplus.cs" />

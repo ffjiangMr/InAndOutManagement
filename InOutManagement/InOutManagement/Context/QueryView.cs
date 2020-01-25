@@ -13,31 +13,41 @@
     using System.Windows.Controls;
 
     #endregion
-    public partial class QueryView: INotifyPropertyChanged
-    {              
+    public partial class QueryView : INotifyPropertyChanged
+    {
 
         public ObservableCollection<String> MaterialList { get; set; } = new ObservableCollection<String>();
         public ObservableCollection<String> ModelList { get; set; } = new ObservableCollection<String>();
-        public ObservableCollection<ListviewContent> ViewList { get; set; } = new ObservableCollection<ListviewContent>();
+        public ObservableCollection<Query> ViewList { get; set; } = new ObservableCollection<Query>();
 
         public event PropertyChangedEventHandler PropertyChanged;
 
         private void Query(object sender, RoutedEventArgs e)
         {
-            this.sqlHelper.Query();
-            this.MaterialList.Add("asdadwa");
-            this.ViewList.Add(new ListviewContent()
+            this.ViewList.Clear();
+            var query = new Query()
             {
-                BillArchive = "asdasdasd",
-                Count = 22,
-                Date = DateTime.Now.ToShortDateString(),
-                Model = "DZ47LE-39-32A",
-                Name = "大汉港白乳胶（A货）",
-                Price = 1111,
-                Status = "进库",
-                Supplier = "甲供",
-                Unit = "个",
-            });
+                Supplier = String.IsNullOrEmpty(this.Supplier.Text) == false ? this.Supplier.Text : String.Empty,
+                Status = String.IsNullOrEmpty(this.Status.Text) == false ? this.Status.Text : String.Empty,
+                Name = String.IsNullOrEmpty(this.Material.Text) == false ? this.Material.Text : String.Empty,
+                Model = String.IsNullOrEmpty(this.Model.Text) == false ? this.Model.Text : String.Empty,
+            };
+            var queryResult = this.sqlHelper.Query<Query>(query);
+            foreach (var item in queryResult)
+            {
+                this.ViewList.Add(new Query()
+                {
+                    BillArchive = item.BillArchive,
+                    Count = item.Count,
+                    Date = item.Date.Substring(0,10),
+                    Model = item.Model,
+                    Name = item.Name,
+                    Price = item.Price,
+                    Status = item.Status,
+                    Supplier = item.Supplier,
+                    Unit = item.Unit,
+                });
+            }
         }
 
         private void EndDate_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
@@ -76,7 +86,7 @@
 
         private void Model_DropDownOpened(object sender, EventArgs e)
         {
-            this.ModelList.Clear();            
+            this.ModelList.Clear();
             var materials = this.sqlHelper.Query<Material>(new Material() { Name = this.Material.Text });
             foreach (var item in materials)
             {

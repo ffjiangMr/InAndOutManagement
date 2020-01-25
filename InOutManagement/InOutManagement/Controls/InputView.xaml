@@ -20,18 +20,18 @@
         <StackPanel Orientation="Vertical">
             <StackPanel Margin="20" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
                 <TextBlock Text="类别"  Margin="10,0" FontFamily="Kristen ITC" FontSize="18" FontWeight="Bold" Foreground="#ff4c00" />
-                <ComboBox Style="{DynamicResource ComboBoxStyle}"  Name="Supplier" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="10,0" Width="200" FontFamily="Kristen ITC" FontSize="18" FontWeight="Bold" Foreground="#ff4c00">
+                <ComboBox IsEditable="False" Style="{DynamicResource ComboBoxStyle}"  Name="Supplier" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="10,0" Width="200" FontFamily="Kristen ITC" FontSize="18" FontWeight="Bold" Foreground="#ff4c00">
                     <ComboBoxItem>甲供</ComboBoxItem>
                     <ComboBoxItem>乙供</ComboBoxItem>
                 </ComboBox>
             </StackPanel>
             <StackPanel Margin="20" Orientation="Horizontal"  VerticalAlignment="Center" HorizontalAlignment="Center">
                 <TextBlock Text="材料"  Margin="10,0" FontFamily="Kristen ITC" FontSize="18" FontWeight="Bold" Foreground="#ff4c00" />
-                <ComboBox ItemsSource="{Binding MaterialList}"  Style="{DynamicResource ComboBoxStyle}" IsEditable="True" Name="Material" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="10,0" Width="200" FontFamily="Kristen ITC" FontSize="18" FontWeight="Bold" Foreground="#ff4c00" DropDownOpened="Material_DropDownOpened" />
+                <ComboBox IsEditable="True" ItemsSource="{Binding MaterialList}"  Style="{DynamicResource ComboBoxStyle}" Name="Material" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="10,0" Width="200" FontFamily="Kristen ITC" FontSize="18" FontWeight="Bold" Foreground="#ff4c00" DropDownOpened="Material_DropDownOpened" />
             </StackPanel>
             <StackPanel Margin="20" Orientation="Horizontal"  VerticalAlignment="Center" HorizontalAlignment="Center">
                 <TextBlock Text="规格"  Margin="10,0" FontFamily="Kristen ITC" FontSize="18" FontWeight="Bold" Foreground="#ff4c00" />
-                <ComboBox  ItemsSource="{Binding ModelList}" Style="{StaticResource ComboBoxStyle}" IsEditable="True" Name="Model" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="10,0" Width="200" FontFamily="Kristen ITC" FontSize="18" FontWeight="Bold" Foreground="#ff4c00" DropDownOpened="Model_DropDownOpened"/>
+                <ComboBox  IsEditable="True" ItemsSource="{Binding ModelList}" Style="{StaticResource ComboBoxStyle}"  Name="Model" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="10,0" Width="200" FontFamily="Kristen ITC" FontSize="18" FontWeight="Bold" Foreground="#ff4c00" DropDownOpened="Model_DropDownOpened"/>
             </StackPanel>
             <StackPanel Margin="20" Orientation="Horizontal"  VerticalAlignment="Center" HorizontalAlignment="Center">
                 <TextBlock Text="单位"  Margin="10,0" FontFamily="Kristen ITC" FontSize="18" FontWeight="Bold" Foreground="#ff4c00" />

@@ -13,14 +13,13 @@
     {
         public Int32 Identity { get; set; }
 
-        public Int32 Material { get; set; }
+        public Int32 Input { get; set; }
 
         public Int32 Count { get; set; }
 
-        public DateTime OutputDate { get; set; }
+        public String OutputDate { get; set; }
 
         public String BillArchive { get; set; }
 
-        public Int32 Input { get; set; }
     }
 }

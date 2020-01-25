@@ -10,6 +10,7 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="../Resources/Styles/DatePickerStyle.xaml"/>
                 <ResourceDictionary Source="../Resources/Styles/ButtonStyle.xaml"/>
+                <ResourceDictionary Source="../Resources/Styles/ComboBoxStyle.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
@@ -32,16 +33,18 @@
                 <DatePicker  Name="EndDate" Style="{DynamicResource DatePickerStyle}" SelectedDateChanged="EndDate_SelectedDateChanged" />
             </StackPanel>
             <StackPanel Orientation="Horizontal" Grid.Column="1">
-                <ComboBox  Name="Supplier" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="10,20" Width="70" FontFamily="Kristen ITC" FontSize="18" FontWeight="Bold" Foreground="#ff4c00" >
+                <ComboBox Style="{DynamicResource ComboBoxStyle}" IsEditable="False"  Name="Supplier" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="10,20" Width="70" FontFamily="Kristen ITC" FontSize="18" FontWeight="Bold" Foreground="#ff4c00" >
+                    <ComboBoxItem>甲供</ComboBoxItem>
                     <ComboBoxItem>甲供</ComboBoxItem>
                     <ComboBoxItem>乙供</ComboBoxItem>
                 </ComboBox>
-                <ComboBox  Name="Status" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="10,20" Width="70" FontFamily="Kristen ITC" FontSize="18" FontWeight="Bold" Foreground="#ff4c00" >
+                <ComboBox Style="{DynamicResource ComboBoxStyle}" IsEditable="False"  Name="Status" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="10,20" Width="70" FontFamily="Kristen ITC" FontSize="18" FontWeight="Bold" Foreground="#ff4c00" >
+                    <ComboBoxItem>甲供</ComboBoxItem>
                     <ComboBoxItem>入库</ComboBoxItem>
                     <ComboBoxItem>出库</ComboBoxItem>
                 </ComboBox>
-                <ComboBox  Name="Material" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="10,20" Width="140" FontFamily="Kristen ITC" FontSize="18" FontWeight="Bold" Foreground="#ff4c00"  ItemsSource="{Binding MaterialrList}" DropDownOpened="Material_DropDownOpened"/>
-                <ComboBox  Name="Model" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="10,20" Width="140" FontFamily="Kristen ITC" FontSize="18" FontWeight="Bold" Foreground="#ff4c00" ItemsSource="{Binding ModelList}" DropDownOpened="Model_DropDownOpened"/>
+                <ComboBox Style="{DynamicResource ComboBoxStyle}" IsEditable="True"  Name="Material" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="10,20" Width="140" FontFamily="Kristen ITC" FontSize="18" FontWeight="Bold" Foreground="#ff4c00"  ItemsSource="{Binding MaterialList}" DropDownOpened="Material_DropDownOpened"/>
+                <ComboBox Style="{DynamicResource ComboBoxStyle}" IsEditable="True"  Name="Model" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="10,20" Width="140" FontFamily="Kristen ITC" FontSize="18" FontWeight="Bold" Foreground="#ff4c00" ItemsSource="{Binding ModelList}" DropDownOpened="Model_DropDownOpened"/>
             </StackPanel>
             <Button Grid.Column="2"  Margin="0,5,30,5" Style="{DynamicResource ButtonStyle}" Content="搜索" Click="Query" />
         </Grid>

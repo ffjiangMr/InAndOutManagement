@@ -23,6 +23,6 @@ namespace InOutManagement.Controls
         {
             InitializeComponent();
             this.DataContext = this;
-        }     
+        }
     }
 }
