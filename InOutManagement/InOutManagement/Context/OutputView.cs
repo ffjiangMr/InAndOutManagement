@@ -1,11 +1,12 @@
 ﻿namespace InOutManagement.Controls
 {
+    using InOutManagement.Common;
 
     #region using directive
 
     using InOutManagement.Entity;
     using InOutManagement.SQLHelper;
-
+    using InOutManagement.Windows;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
@@ -149,21 +150,36 @@
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            var inputIdentities = this.ObtainInputIdentity();
-            var tempCount = Convert.ToInt32(this.Count.Text);
-            foreach (var identity in inputIdentities)
+            if (this.Validate() == true)
             {
-                if (tempCount > 0)
+                var inputIdentities = this.ObtainInputIdentity();
+                var tempCount = Convert.ToInt32(this.Count.Text);
+                foreach (var identity in inputIdentities)
                 {
-                    var tempIndentity = identity;
-                    var count = this.CalculateInputLaveCount(ref tempIndentity);
-                    if (count > 0)
+                    if (tempCount > 0)
                     {
-                        Int32 realCount = tempCount > count ? count : tempCount;
-                        tempCount -= realCount;
-                        this.InsertOutput(ref tempIndentity, ref realCount);
+                        var tempIndentity = identity;
+                        var count = this.CalculateInputLaveCount(ref tempIndentity);
+                        if (count > 0)
+                        {
+                            Int32 realCount = tempCount > count ? count : tempCount;
+                            tempCount -= realCount;
+                            if (this.InsertOutput(ref tempIndentity, ref realCount))
+                            {
+                                this.mainWindow.WindowsStatus = MessageEnum.OutputError;
+                                MessageBox.Show("检出失败", "警告", MessageBoxButton.OK, MessageBoxImage.Warning);
+                                break;
+                            }
+                        }
                     }
                 }
+                this.mainWindow.WindowsStatus = MessageEnum.OutputSuccess;
+                MessageBox.Show("检出成功", "提示", MessageBoxButton.OK);
+            }
+            else
+            {
+                this.mainWindow.WindowsStatus = MessageEnum.OutputFailed;
+                MessageBox.Show("检出失败", "警告", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }
 
@@ -280,6 +296,14 @@
             }
         }
 
+        private Boolean Validate()
+        {
+            return (String.IsNullOrEmpty(this.Supplier.Text) == false) &&
+                   (String.IsNullOrEmpty(this.Material.Text) == false) &&
+                   (String.IsNullOrEmpty(this.Model.Text) == false) &&
+                   (String.IsNullOrEmpty(this.Count.Text) == false);                   
+        }
+
         #region NotifyEnevt
 
         public void OnPropertyChanged(String propertyName)
@@ -301,7 +325,7 @@
         private Boolean isMaterialClear = false;
         private String materialText = String.Empty;
         private Timer timer = new Timer(100);
-
+        private MainWindow mainWindow;
         #endregion
     }
 }

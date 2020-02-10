@@ -1,4 +1,5 @@
-﻿using System;
+﻿using InOutManagement.Windows;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -26,6 +27,7 @@ namespace InOutManagement.Controls
             this.Loaded += delegate
             {
                 this.Initial();
+                this.mainWindow = MainWindow.GetInstance();
             };
         }       
     }

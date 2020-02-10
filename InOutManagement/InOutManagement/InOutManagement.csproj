@@ -34,6 +34,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="log4net">
+      <HintPath>Log4\log4net.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.SQLite">
@@ -67,6 +70,7 @@
     <Compile Include="Commands\OutputCommand.cs" />
     <Compile Include="Commands\QueryCommand.cs" />
     <Compile Include="Commands\RestoreCommand.cs" />
+    <Compile Include="Common\MessageEnum.cs" />
     <Compile Include="Context\InputView.cs" />
     <Compile Include="Context\MainWindow.cs" />
     <Compile Include="Context\OutputView.cs" />
@@ -85,7 +89,12 @@
     <Compile Include="Entity\Material.cs" />
     <Compile Include="Entity\Output.cs" />
     <Compile Include="Entity\Surplus.cs" />
-    <Compile Include="ExtensionMethon\VisualHelper.cs" />
+    <Compile Include="ExtensionMethod\VisualHelper.cs" />
+    <Compile Include="Resources\Message\MessageResource.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>MessageResource.resx</DependentUpon>
+    </Compile>
     <Compile Include="SQLHelper\SQLHelper.cs" />
     <Compile Include="Windows\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
@@ -145,9 +154,16 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Message\MessageResource.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>MessageResource.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <None Include="..\.editorconfig">
       <Link>.editorconfig</Link>
     </None>
+    <Content Include="App.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

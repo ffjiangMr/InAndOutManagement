@@ -66,7 +66,7 @@
                             <ColumnDefinition Width="0.7*"/>
                             <ColumnDefinition Width="0.3*" MaxWidth="30"/>
                         </Grid.ColumnDefinitions>
-                        <TextBox x:Name="ComboBoxContent" Grid.Column="0" IsEnabled="{TemplateBinding IsEditable}" Text="{TemplateBinding Text}" FontFamily="Kristen ITC" FontSize="18" FontWeight="Bold" Foreground="#ff4c00"/>
+                        <TextBox x:Name="ComboBoxContent" Grid.Column="0" IsEnabled="{TemplateBinding IsEditable}" Text="{TemplateBinding Text}" FontFamily="Kristen ITC" FontSize="18" FontWeight="Bold" Foreground="#ff4c00" />
                         <Border  Grid.Column="0" BorderThickness="1,1,0,1" BorderBrush="#81D779" CornerRadius="1,0,0,1">
                         </Border>
                         <Border Grid.Column="1" BorderThickness="0,1,1,1" BorderBrush="#81D779" CornerRadius="0,1,1,0">

@@ -7,6 +7,10 @@ using System;
 using InOutManagement.Commands;
 using System.Windows.Input;
 using System.Windows.Media;
+using InOutManagement.Common;
+using InOutManagement.Resources.Message;
+using System.Timers;
+using log4net;
 
 #endregion
 
@@ -17,6 +21,7 @@ namespace InOutManagement.Windows
     /// </summary>
     public sealed partial class MainWindow : Window, INotifyPropertyChanged
     {
+        private static ILog Logger = LogManager.GetLogger(typeof(MainWindow));
         private static MainWindow instance;
         public static MainWindow GetInstance()
         {
@@ -133,17 +138,16 @@ namespace InOutManagement.Windows
 
         #region Tips
 
-        private String tipsPre = "Tips: ";
-        private String tips;
+        public MessageEnum WindowsStatus { get; set; }
+        
         public String Tips
         {
             get
             {
-                return this.tipsPre + tips;
+                return "Tips: " + MessageResource.ResourceManager.GetString(WindowsStatus.ToString());
             }
             set
             {
-                this.tips = value;
                 this.OnPropertyChanged("Tips");
             }
         }
@@ -258,5 +262,7 @@ namespace InOutManagement.Windows
                 temp(this, new PropertyChangedEventArgs(propertyName));
             }
         }
+
+        private Timer timer = new Timer(100);
     }
 }

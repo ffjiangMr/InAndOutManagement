@@ -1,13 +1,14 @@
 ﻿namespace InOutManagement.Controls
 {
+    using InOutManagement.Common;
     using InOutManagement.Entity;
 
     #region using directive
 
     using InOutManagement.SQLHelper;
+    using InOutManagement.Windows;
 
     using System;
-    using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.ComponentModel;
     using System.Windows;
@@ -16,9 +17,11 @@
     using System.Windows.Media.Imaging;
 
     #endregion
+
     /// <summary>
     /// Interaction logic for InputView.xaml
     /// </summary>
+    /// 
     public partial class InputView : UserControl, INotifyPropertyChanged
     {
         #region Binding Property
@@ -202,8 +205,24 @@
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            InsertMaterial();
-            InsertInput();
+            if (this.Validate() == true)
+            {
+                if (InsertMaterial() && InsertInput())
+                {
+                    this.mainWindow.WindowsStatus = MessageEnum.InsertSuccess;
+                    MessageBox.Show("录入成功", "提示", MessageBoxButton.OK);
+                }
+                else
+                {
+                    this.mainWindow.WindowsStatus = MessageEnum.InsertError;
+                    MessageBox.Show("录入失败", "警告", MessageBoxButton.OK, MessageBoxImage.Warning);
+                }
+            }
+            else
+            {
+                this.mainWindow.WindowsStatus = MessageEnum.InsertFailed;
+                MessageBox.Show("录入失败", "警告", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
         }
 
         private void Initial()
@@ -271,8 +290,9 @@
             }
         }
 
-        private void InsertMaterial()
+        private Boolean InsertMaterial()
         {
+            Boolean result = true;
             var material = new Material()
             {
                 Name = this.materialText,
@@ -282,12 +302,14 @@
             var queryResult = sqlHelper.Query<Material>(material);
             if (queryResult?.Count == 0)
             {
-                sqlHelper.Insert<Material>(material);
+                result = sqlHelper.Insert<Material>(material);
             }
+            return result;
         }
 
-        private void InsertInput()
+        private Boolean InsertInput()
         {
+            Boolean result = false;
             var material = new Material()
             {
                 Name = this.materialText,
@@ -306,14 +328,19 @@
                     Price = Convert.ToDouble(this.Price.Text),
                     Supplier = this.Supplier.Text,
                 };
-                this.sqlHelper.Insert<Input>(input);
+                result = this.sqlHelper.Insert<Input>(input);
             }
+            return result;
         }
 
         private Boolean Validate()
         {
-            //TODO
-            return false;
+            return (String.IsNullOrEmpty(this.Supplier.Text) == false) &&
+                   (String.IsNullOrEmpty(this.Material.Text) == false) &&
+                   (String.IsNullOrEmpty(this.Model.Text) == false) &&
+                   (String.IsNullOrEmpty(this.Count.Text) == false) &&
+                   (String.IsNullOrEmpty(this.Unit.Text) == false) &&
+                   (String.IsNullOrEmpty(this.Price.Text) == false);
         }
 
         #region private 
@@ -325,6 +352,8 @@
         /// 为防止无限递归，保证数据准确设置此控制
         private Boolean isMaterialClear = false;
         private Boolean isModelClear = false;
+
+        private MainWindow mainWindow;
 
         #endregion
     }

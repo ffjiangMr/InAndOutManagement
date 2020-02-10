@@ -107,19 +107,6 @@
                 return this.SetColumn<T>(queryColumnList ?? names, ref reader);
             }
         }
-      
-        public void InsertInput(ref Input input)
-        {
-            //using (var transition = this.connect.BeginTransaction())
-            //{
-            //    var command = this.connect.CreateCommand();
-            //    command.CommandText = "insert into Input ('InputDate','Material','Unit') values(@Name,@Model,@Unit)";
-            //    this.AddParameters(command.Parameters, material);
-            //    command.ExecuteNonQuery();
-            //    transition.Commit();
-            //}
-            //this.QueryMaterialIdentity(ref material);
-        }
 
         private void Initial()
         {

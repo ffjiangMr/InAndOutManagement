@@ -2,9 +2,10 @@
 {
     #region using driective
 
+    using InOutManagement.Common;
     using InOutManagement.Entity;
-    using InOutManagement.Windows;
     using InOutManagement.SQLHelper;
+    using InOutManagement.Windows;
 
     using System;
     using System.Collections.ObjectModel;
@@ -15,7 +16,6 @@
     #endregion
     public partial class QueryView : INotifyPropertyChanged
     {
-
         public ObservableCollection<String> MaterialList { get; set; } = new ObservableCollection<String>();
         public ObservableCollection<String> ModelList { get; set; } = new ObservableCollection<String>();
         public ObservableCollection<Query> ViewList { get; set; } = new ObservableCollection<Query>();
@@ -51,6 +51,7 @@
                     });
                 }
             }
+            this.mainWindow.WindowsStatus = MessageEnum.QuerySuccessful;
         }
 
         private Boolean FilterData(Query query)
@@ -122,5 +123,7 @@
         }
 
         private SQLHelper sqlHelper = SQLHelper.GetInstance();
+
+        private MainWindow mainWindow = MainWindow.GetInstance();
     }
 }
