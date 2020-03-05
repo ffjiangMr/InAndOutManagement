@@ -1,12 +1,15 @@
 ﻿namespace InOutManagement.Controls
 {
-    using InOutManagement.Common;
-
     #region using directive
+
+    using InOutManagement.Common;
 
     using InOutManagement.Entity;
     using InOutManagement.SQLHelper;
     using InOutManagement.Windows;
+
+    using log4net;
+
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
@@ -20,6 +23,8 @@
 
     public partial class OutputView : UserControl, INotifyPropertyChanged
     {
+        private static ILog Logger = LogManager.GetLogger(typeof(InputView));
+
         #region Binding Property
 
         #region Title
@@ -81,7 +86,7 @@
         {
             get
             {
-                return "但前库存：" + this.CalculateCount().ToString();
+                return "当前库存：" + this.CalculateCount().ToString();
             }
             set
             {
@@ -141,7 +146,12 @@
         {
             if (String.IsNullOrEmpty(this.Count.Text) == false)
             {
-                if (Int32.TryParse(this.Count.Text, out _) == false)
+                Int32 currentCount = 0 ;
+                if (Int32.TryParse(this.Count.Text, out currentCount) == false)
+                {
+                    this.Count.Text = this.Count.Text.Remove(this.Count.Text.Length - 1, 1);
+                }
+                if (currentCount > this.CalculateCount())
                 {
                     this.Count.Text = this.Count.Text.Remove(this.Count.Text.Length - 1, 1);
                 }
@@ -164,7 +174,7 @@
                         {
                             Int32 realCount = tempCount > count ? count : tempCount;
                             tempCount -= realCount;
-                            if (this.InsertOutput(ref tempIndentity, ref realCount))
+                            if (this.InsertOutput(ref tempIndentity, ref realCount) == false)
                             {
                                 this.mainWindow.WindowsStatus = MessageEnum.OutputError;
                                 MessageBox.Show("检出失败", "警告", MessageBoxButton.OK, MessageBoxImage.Warning);
@@ -178,6 +188,7 @@
             }
             else
             {
+                Logger.Error("数据验证失败");
                 this.mainWindow.WindowsStatus = MessageEnum.OutputFailed;
                 MessageBox.Show("检出失败", "警告", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
@@ -189,8 +200,11 @@
             var output = new Output()
             {
                 Count = materialCount,
-                OutputDate = DateTime.Now.ToString("yyyy-MM-dd HH-mm-ss:ffffff"),
-                BillArchive = this.BillArchive.Text,
+                OutputDate = this.StartDate.SelectedDate != null ?
+                             this.StartDate.SelectedDate?.ToString("yyyy-MM-dd HH-mm-ss:ffffff") :
+                             DateTime.Now.ToString("yyyy-MM-dd HH-mm-ss:ffffff"),
+                //BillArchive = this.BillArchive.Text,
+                Pickup = this.Pickup.Text,
                 Input = inputIdentity,
             };
             result = this.sqlHelper.Insert<Output>(output);
@@ -199,6 +213,7 @@
 
         private List<Int32> ObtainInputIdentity()
         {
+            Logger.Info("Func in.");
             List<Int32> result = new List<Int32>();
             var materialResult = this.sqlHelper.Query<Material>(new Material()
             {
@@ -218,11 +233,13 @@
                     result.Add(item.Identity);
                 }
             }
+            Logger.Info("Func out.");
             return result;
         }
 
         private Int32 CalculateInputLaveCount(ref Int32 inputIdentity)
         {
+            Logger.Info("Func in.");
             Int32 result = 0;
             var inputResult = this.sqlHelper.Query<Input>(new Input()
             {
@@ -240,6 +257,7 @@
             {
                 result -= output.Count;
             }
+            Logger.Info("Func out.");
             return result;
         }
 
@@ -301,6 +319,7 @@
             return (String.IsNullOrEmpty(this.Supplier.Text) == false) &&
                    (String.IsNullOrEmpty(this.Material.Text) == false) &&
                    (String.IsNullOrEmpty(this.Model.Text) == false) &&
+                   (String.IsNullOrEmpty(this.Pickup.Text) == false) &&
                    (String.IsNullOrEmpty(this.Count.Text) == false);                   
         }
 

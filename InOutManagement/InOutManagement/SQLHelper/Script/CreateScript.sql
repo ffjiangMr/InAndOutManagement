@@ -10,7 +10,8 @@ create table "Output"("Identity" integer primary key autoincrement,
                       "Input" integer not null,
                       "Count" integer not null,
                       "OutputDate" text not null,                                            
-                      "BillArchive" text
+                      "Pickup" text not null, 
+                      "BillArchive" text                      
                       );
 
 create table "Material"("Identity" integer primary key autoincrement,
@@ -19,10 +20,10 @@ create table "Material"("Identity" integer primary key autoincrement,
                         "Unit" text not null);
 
 create view Query as
-select input.InputDate as 'Date' ,input.Supplier as 'Supplier',input.price as 'Price',input.Count as 'Count', input.BillArchive as 'BillArchive', material.Name as 'Name',material.Model as 'Model',material.Unit as 'Unit','入库' as 'Status'
+select input.InputDate as 'Date' ,input.Supplier as 'Supplier',input.price as 'Price',input.Count as 'Count', "" as 'Pickup', material.Name as 'Name',material.Model as 'Model',material.Unit as 'Unit','入库' as 'Status'
 from input as input,material as material
 where input.Material = material.Identity
 union All
-select output.OutputDate  as 'Date' ,input.Supplier  as 'Supplier',input.price  as 'Price',output.Count  as 'Count',output.BillArchive  as 'BillArchive',material.Name  as 'Name',material.Model  as 'Model',material.Unit  as 'Unit','出库' as 'Status'
+select output.OutputDate  as 'Date' ,input.Supplier  as 'Supplier',input.price  as 'Price',output.Count  as 'Count',output.Pickup  as 'Pickup',material.Name  as 'Name',material.Model  as 'Model',material.Unit  as 'Unit','出库' as 'Status'
 from input as input,material as material,output as output
 where output.Input = input.Identity and input.Material = material.Identity

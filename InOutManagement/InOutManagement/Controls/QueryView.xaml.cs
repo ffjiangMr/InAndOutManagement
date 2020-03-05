@@ -1,4 +1,5 @@
-﻿using System;
+﻿using InOutManagement.Windows;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,6 +24,10 @@ namespace InOutManagement.Controls
         {
             InitializeComponent();
             this.DataContext = this;
+            this.Loaded += delegate
+            {                
+                this.mainWindow = MainWindow.GetInstance();
+            };
         }        
     }
 }

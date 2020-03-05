@@ -79,7 +79,7 @@
                         <GridViewColumn Width="{Binding ElementName=column4,Path=ActualWidth}" Header="单位" DisplayMemberBinding="{Binding Unit}"/>
                         <GridViewColumn Width="{Binding ElementName=column5,Path=ActualWidth}" Header="价格" DisplayMemberBinding="{Binding Price}"/>
                         <GridViewColumn Width="{Binding ElementName=column6,Path=ActualWidth}" Header="数量" DisplayMemberBinding="{Binding Count}"/>
-                        <GridViewColumn Width="{Binding ElementName=column7,Path=ActualWidth}" Header="票据" DisplayMemberBinding="{Binding BillArchive}"/>
+                        <GridViewColumn Width="{Binding ElementName=column7,Path=ActualWidth}" Header="出货人" DisplayMemberBinding="{Binding Pickup}"/>
                         <GridViewColumn Width="{Binding ElementName=column8,Path=ActualWidth}" Header="状态" DisplayMemberBinding="{Binding Status}"/>
                     </GridView>
                 </ListView.View>

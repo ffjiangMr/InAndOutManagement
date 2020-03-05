@@ -23,7 +23,7 @@ namespace InOutManagement.Windows
             this.Loaded += delegate
             {
                 Logger.Info("Func in.");
-                Logger.Debug("主窗体加载完成");
+                Logger.Debug("主窗体加载完成");                
                 Border windowTitleBorder = (Border)this.Template.FindName("root", this);
                 windowTitleBorder.MouseLeftButtonDown += (object sender, MouseButtonEventArgs e) =>
                 {
@@ -31,7 +31,7 @@ namespace InOutManagement.Windows
                 };
                 this.timer.Elapsed += delegate
                 {
-                    this.Tips = String.Empty; ;
+                    this.Tips = String.Empty;
                 };
                 this.timer?.Start();
                 Logger.Debug("启动定时器");

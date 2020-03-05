@@ -39,7 +39,6 @@
                 {
                     this.ViewList.Add(new Query()
                     {
-                        BillArchive = item.BillArchive,
                         Count = item.Count,
                         Date = item.Date.Substring(0, 10),
                         Model = item.Model,
@@ -48,6 +47,7 @@
                         Status = item.Status,
                         Supplier = item.Supplier,
                         Unit = item.Unit,
+                        Pickup = item.Pickup,
                     });
                 }
             }
@@ -124,6 +124,6 @@
 
         private SQLHelper sqlHelper = SQLHelper.GetInstance();
 
-        private MainWindow mainWindow = MainWindow.GetInstance();
+        private MainWindow mainWindow;
     }
 }

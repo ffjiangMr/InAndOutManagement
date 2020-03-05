@@ -21,5 +21,6 @@
 
         public String BillArchive { get; set; }
 
+        public String Pickup { get; set; }
     }
 }

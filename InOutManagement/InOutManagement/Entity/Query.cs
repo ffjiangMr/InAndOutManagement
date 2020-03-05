@@ -25,7 +25,7 @@
 
         public Int32 Count { get; set; }
 
-        public String BillArchive { get; set; }
+        public String Pickup { get; set; }
 
         public String Status { get; set; }        
     }

@@ -1,12 +1,13 @@
 ﻿namespace InOutManagement.Controls
 {
-    using InOutManagement.Common;
-    using InOutManagement.Entity;
-
     #region using directive
 
+    using InOutManagement.Common;
+    using InOutManagement.Entity;
     using InOutManagement.SQLHelper;
     using InOutManagement.Windows;
+
+    using log4net;
 
     using System;
     using System.Collections.ObjectModel;
@@ -24,6 +25,8 @@
     /// 
     public partial class InputView : UserControl, INotifyPropertyChanged
     {
+        private static ILog Logger = LogManager.GetLogger(typeof(InputView));
+
         #region Binding Property
 
         #region Title
@@ -172,7 +175,7 @@
                             continue;
                         }
                     }
-                    this.ModelList.Add(item.Name);
+                    this.ModelList.Add(item.Model);
                 }
             }
             this.isModelClear = false;
@@ -214,12 +217,14 @@
                 }
                 else
                 {
+                    Logger.Error("数据添加失败.");
                     this.mainWindow.WindowsStatus = MessageEnum.InsertError;
                     MessageBox.Show("录入失败", "警告", MessageBoxButton.OK, MessageBoxImage.Warning);
                 }
             }
             else
             {
+                Logger.Error("数据验证失败.");
                 this.mainWindow.WindowsStatus = MessageEnum.InsertFailed;
                 MessageBox.Show("录入失败", "警告", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
@@ -322,9 +327,11 @@
                 var input = new Input()
                 {
                     Material = queryResult[0].Identity,
-                    BillArchive = this.BillArchive.Text,
+                    //BillArchive = this.BillArchive.Text,
                     Count = Convert.ToInt32(this.Count.Text),
-                    InputDate = DateTime.Now.ToString("yyyy-MM-dd HH-mm-ss:ffffff"),
+                    InputDate =  this.StartDate.SelectedDate != null ?
+                                 this.StartDate.SelectedDate?.ToString("yyyy-MM-dd HH-mm-ss:ffffff") :
+                                 DateTime.Now.ToString("yyyy-MM-dd HH-mm-ss:ffffff"),
                     Price = Convert.ToDouble(this.Price.Text),
                     Supplier = this.Supplier.Text,
                 };

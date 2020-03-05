@@ -1,21 +1,23 @@
-﻿
-#region  using directive
-
-using System.ComponentModel;
-using System.Windows;
-using System;
-using InOutManagement.Commands;
-using System.Windows.Input;
-using System.Windows.Media;
-using InOutManagement.Common;
-using InOutManagement.Resources.Message;
-using System.Timers;
-using log4net;
-
-#endregion
-
-namespace InOutManagement.Windows
+﻿namespace InOutManagement.Windows
 {
+
+    #region  using directive
+
+    using InOutManagement.Commands;
+    using InOutManagement.Common;
+    using InOutManagement.Resources.Message;
+
+    using log4net;
+
+    using System;
+    using System.ComponentModel;
+    using System.Timers;
+    using System.Windows;
+    using System.Windows.Input;
+    using System.Windows.Media;
+
+    #endregion
+
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
