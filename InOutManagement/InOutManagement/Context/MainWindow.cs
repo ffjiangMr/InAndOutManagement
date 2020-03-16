@@ -21,7 +21,7 @@
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public sealed partial class MainWindow : Window, INotifyPropertyChanged
+    public partial class MainWindow : Window, INotifyPropertyChanged
     {
         private static ILog Logger = LogManager.GetLogger(typeof(MainWindow));
         private static MainWindow instance;
@@ -46,7 +46,7 @@
             }
         }
 
-        #endregion
+        #endregion·
 
         #region 窗体内背景色
 

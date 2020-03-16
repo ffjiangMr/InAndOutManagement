@@ -2,3 +2,6 @@
 
 # CS0628: New protected member declared in sealed class
 dotnet_diagnostic.CS0628.severity = none
+
+# CS0067: The event 'CloseCommand.CanExecuteChanged' is never used
+dotnet_diagnostic.CS0067.severity = none

@@ -25,9 +25,9 @@ namespace InOutManagement.Controls
             InitializeComponent();
             this.DataContext = this;
             this.Loaded += delegate
-            {                
+            {                                
                 this.mainWindow = MainWindow.GetInstance();
             };
-        }        
+        }
     }
 }

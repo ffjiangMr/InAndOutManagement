@@ -11,7 +11,7 @@ namespace InOutManagement.Windows
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public sealed partial class MainWindow : Window, INotifyPropertyChanged
+    public partial class MainWindow : Window, INotifyPropertyChanged
     {
         public MainWindow()
         {
@@ -30,7 +30,7 @@ namespace InOutManagement.Windows
                     this.DragMove();
                 };
                 this.timer.Elapsed += delegate
-                {
+                {                    
                     this.Tips = String.Empty;
                 };
                 this.timer?.Start();

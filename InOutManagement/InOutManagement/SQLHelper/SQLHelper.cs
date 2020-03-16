@@ -131,6 +131,49 @@
             return result;
         }
 
+        public Int32 Delete<T>(T entity)
+        {
+            Logger.Info("Func in.");
+            Int32 result = 0;
+            try
+            {
+                Type type = entity.GetType();
+                using (var transition = this.connect.BeginTransaction())
+                {
+                    var command = this.connect.CreateCommand();
+                    StringBuilder parameter = new StringBuilder(256);                   
+                    var properties = type.GetProperties(BindingFlags.Public | BindingFlags.Instance);
+                    foreach (var property in properties)
+                    {
+                        var propertyValue = property.GetValue(entity, null)?.ToString();                       
+                        if ((String.IsNullOrEmpty(propertyValue) == false) && (propertyValue != 0.ToString()))
+                        {
+                            parameter.Append(property.Name);
+                            parameter.Append(" = ");
+                            parameter.Append("@" + property.Name + " ");
+                            parameter.Append(" and ");
+                        }
+                    }
+                    if (parameter.Length > 0)
+                    {
+                        parameter.Remove(parameter.Length - 5, 5);                       
+                        command.CommandText = "update " + type.Name + " set IsDeleated = 'True' where ";
+                        command.CommandText += parameter.ToString();                        
+                        this.AddParameters(command.Parameters, entity);
+                        result = command.ExecuteNonQuery();                        
+                    }
+                    transition.Commit();
+                    command.Dispose();
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex.Message);
+            }
+            Logger.Info("Func out.");
+            return result;
+        }
+
         private void Initial()
         {
             Logger.Info("Func in.");

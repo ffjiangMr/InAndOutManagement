@@ -33,20 +33,21 @@
                 <DatePicker  Name="EndDate" Style="{DynamicResource DatePickerStyle}" SelectedDateChanged="EndDate_SelectedDateChanged" />
             </StackPanel>
             <StackPanel Orientation="Horizontal" Grid.Column="1">
-                <ComboBox Style="{DynamicResource ComboBoxStyle}" IsEditable="False"  Name="Supplier" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="10,20" Width="70" FontFamily="Kristen ITC" FontSize="18" FontWeight="Bold" Foreground="#ff4c00" >
+                <ComboBox Style="{DynamicResource ComboBoxStyle}" IsEditable="False"  Name="Supplier" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="3,20" Width="70" FontFamily="Kristen ITC" FontSize="18" FontWeight="Bold" Foreground="#ff4c00" >
                     <ComboBoxItem></ComboBoxItem>
                     <ComboBoxItem>甲供</ComboBoxItem>
                     <ComboBoxItem>乙供</ComboBoxItem>
                 </ComboBox>
-                <ComboBox Style="{DynamicResource ComboBoxStyle}" IsEditable="False"  Name="Status" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="10,20" Width="70" FontFamily="Kristen ITC" FontSize="18" FontWeight="Bold" Foreground="#ff4c00" >
+                <ComboBox Style="{DynamicResource ComboBoxStyle}" IsEditable="False"  Name="Status" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="3,20" Width="70" FontFamily="Kristen ITC" FontSize="18" FontWeight="Bold" Foreground="#ff4c00" >
                     <ComboBoxItem></ComboBoxItem>
                     <ComboBoxItem>入库</ComboBoxItem>
                     <ComboBoxItem>出库</ComboBoxItem>
                 </ComboBox>
-                <ComboBox Style="{DynamicResource ComboBoxStyle}" IsEditable="True"  Name="Material" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="10,20" Width="140" FontFamily="Kristen ITC" FontSize="18" FontWeight="Bold" Foreground="#ff4c00"  ItemsSource="{Binding MaterialList}" DropDownOpened="Material_DropDownOpened"/>
-                <ComboBox Style="{DynamicResource ComboBoxStyle}" IsEditable="True"  Name="Model" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="10,20" Width="140" FontFamily="Kristen ITC" FontSize="18" FontWeight="Bold" Foreground="#ff4c00" ItemsSource="{Binding ModelList}" DropDownOpened="Model_DropDownOpened"/>
+                <ComboBox Style="{DynamicResource ComboBoxStyle}" IsEditable="True"  Name="Material" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="3,20" Width="100" FontFamily="Kristen ITC" FontSize="18" FontWeight="Bold" Foreground="#ff4c00"  ItemsSource="{Binding MaterialList}" DropDownOpened="Material_DropDownOpened"/>
+                <ComboBox Style="{DynamicResource ComboBoxStyle}" IsEditable="True"  Name="Model" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="3,20" Width="100" FontFamily="Kristen ITC" FontSize="18" FontWeight="Bold" Foreground="#ff4c00" ItemsSource="{Binding ModelList}" DropDownOpened="Model_DropDownOpened"/>
+                <ComboBox Style="{DynamicResource ComboBoxStyle}" IsEditable="True"  Name="Pickup" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="3,20" Width="100" FontFamily="Kristen ITC" FontSize="18" FontWeight="Bold" Foreground="#ff4c00" ItemsSource="{Binding PickuplList}" DropDownOpened="Pickup_DropDownOpened"/>
             </StackPanel>
-            <Button Grid.Column="2"  Margin="0,5,30,5" Style="{DynamicResource ButtonStyle}" Content="搜索" Click="Query" />
+            <Button Grid.Column="2"  Margin="0,5,10,5" Style="{DynamicResource ButtonStyle}" Content="搜索" Click="Query" />
         </Grid>
         <Grid Grid.Row="1" >
             <Grid.ColumnDefinitions>
@@ -69,7 +70,7 @@
             <Grid Grid.Column="6" Name="column6"/>
             <Grid Grid.Column="7" Name="column7"/>
             <Grid Grid.Column="8" Name="column8"/>
-            <ListView VerticalAlignment="Top" HorizontalAlignment="Center" BorderThickness="0" Grid.ColumnSpan="9" FontFamily="Kristen ITC" Background="Transparent" FontSize="26" FontWeight="Bold" Foreground="#ff4c00" ItemsSource="{Binding ViewList}" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+            <ListView x:Name="QueryListView" VerticalAlignment="Top" HorizontalAlignment="Center" BorderThickness="0" Grid.ColumnSpan="9" FontFamily="Kristen ITC" Background="Transparent" FontSize="26" FontWeight="Bold" Foreground="#ff4c00" ItemsSource="{Binding ViewList}" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
                 <ListView.View>
                     <GridView AllowsColumnReorder="True" >
                         <GridViewColumn Width="{Binding ElementName=column0,Path=ActualWidth}" Header="时间" DisplayMemberBinding="{Binding Date}"/>
@@ -83,10 +84,16 @@
                         <GridViewColumn Width="{Binding ElementName=column8,Path=ActualWidth}" Header="状态" DisplayMemberBinding="{Binding Status}"/>
                     </GridView>
                 </ListView.View>
+                <ListView.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="删除" Click="Delete_Click">
+                        </MenuItem>
+                    </ContextMenu>
+                </ListView.ContextMenu>
             </ListView>
         </Grid>
         <Grid Grid.Row="2" >
-            <Button Style="{DynamicResource ButtonStyle}" Content="导出"/>
+            <Button Name="Import" Style="{DynamicResource ButtonStyle}" Content="导出" Click="Import_Click"/>
         </Grid>
     </Grid>
 </UserControl>

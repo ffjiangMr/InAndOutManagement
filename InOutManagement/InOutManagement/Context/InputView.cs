@@ -12,6 +12,7 @@
     using System;
     using System.Collections.ObjectModel;
     using System.ComponentModel;
+    using System.Text;
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Media;
@@ -208,25 +209,29 @@
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            if (this.Validate() == true)
+            var message = new PromptMessageBox();
+            if (message.ShowMessage(this.ToString()) == true)
             {
-                if (InsertMaterial() && InsertInput())
+                if (this.Validate() == true)
                 {
-                    this.mainWindow.WindowsStatus = MessageEnum.InsertSuccess;
-                    MessageBox.Show("录入成功", "提示", MessageBoxButton.OK);
+                    if (InsertMaterial() && InsertInput())
+                    {
+                        this.mainWindow.WindowsStatus = MessageEnum.InsertSuccess;
+                        MessageBox.Show("录入成功", "提示", MessageBoxButton.OK);
+                    }
+                    else
+                    {
+                        Logger.Error("数据添加失败.");
+                        this.mainWindow.WindowsStatus = MessageEnum.InsertError;
+                        MessageBox.Show("录入失败", "警告", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    }
                 }
                 else
                 {
-                    Logger.Error("数据添加失败.");
-                    this.mainWindow.WindowsStatus = MessageEnum.InsertError;
+                    Logger.Error("数据验证失败.");
+                    this.mainWindow.WindowsStatus = MessageEnum.InsertFailed;
                     MessageBox.Show("录入失败", "警告", MessageBoxButton.OK, MessageBoxImage.Warning);
                 }
-            }
-            else
-            {
-                Logger.Error("数据验证失败.");
-                this.mainWindow.WindowsStatus = MessageEnum.InsertFailed;
-                MessageBox.Show("录入失败", "警告", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }
 
@@ -300,9 +305,9 @@
             Boolean result = true;
             var material = new Material()
             {
-                Name = this.materialText,
-                Model = this.modelText,
-                Unit = this.UntiContent,
+                Name = this.materialText.Trim(),
+                Model = this.modelText.Trim(),
+                Unit = this.UntiContent.Trim(),
             };
             var queryResult = sqlHelper.Query<Material>(material);
             if (queryResult?.Count == 0)
@@ -317,9 +322,9 @@
             Boolean result = false;
             var material = new Material()
             {
-                Name = this.materialText,
-                Model = this.modelText,
-                Unit = this.UntiContent,
+                Name = this.materialText.Trim(),
+                Model = this.modelText.Trim(),
+                Unit = this.UntiContent.Trim(),
             };
             var queryResult = sqlHelper.Query<Material>(material);
             if (queryResult.Count > 0)
@@ -327,13 +332,13 @@
                 var input = new Input()
                 {
                     Material = queryResult[0].Identity,
-                    //BillArchive = this.BillArchive.Text,
-                    Count = Convert.ToInt32(this.Count.Text),
-                    InputDate =  this.StartDate.SelectedDate != null ?
+                    Count = Convert.ToInt32(this.Count.Text.Trim()),
+                    InputDate = this.StartDate.SelectedDate != null ?
                                  this.StartDate.SelectedDate?.ToString("yyyy-MM-dd HH-mm-ss:ffffff") :
                                  DateTime.Now.ToString("yyyy-MM-dd HH-mm-ss:ffffff"),
-                    Price = Convert.ToDouble(this.Price.Text),
-                    Supplier = this.Supplier.Text,
+                    Price = Convert.ToDouble(this.Price.Text.Trim()),
+                    Supplier = this.Supplier.Text.Trim(),
+                    IsDeleated = false,
                 };
                 result = this.sqlHelper.Insert<Input>(input);
             }
@@ -363,5 +368,19 @@
         private MainWindow mainWindow;
 
         #endregion
+
+        public override String ToString()
+        {
+            StringBuilder result = new StringBuilder();
+            result.Append("入库时间: ").Append(this.StartDate.SelectedDate?.ToShortDateString()).Append(Environment.NewLine);
+            result.Append("入库类别: ").Append(this.Supplier.Text).Append(Environment.NewLine);
+            result.Append("入库材料: ").Append(this.Material.Text).Append(Environment.NewLine);
+            result.Append("材料规格: ").Append(this.Model.Text).Append(Environment.NewLine);
+            result.Append("材料单位: ").Append(this.Unit.Text).Append(Environment.NewLine);
+            result.Append("入库数量: ").Append(this.Count.Text).Append(Environment.NewLine);
+            result.Append("材料价格: ").Append(this.Price.Text).Append(Environment.NewLine);
+            return result.ToString();
+        }
+
     }
 }

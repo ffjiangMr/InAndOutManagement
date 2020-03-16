@@ -22,5 +22,7 @@
         public String BillArchive { get; set; }
 
         public String Pickup { get; set; }
+
+        public Boolean IsDeleated { get; set; }
     }
 }

@@ -13,6 +13,7 @@
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
+    using System.Text;
     using System.Timers;
     using System.Windows;
     using System.Windows.Controls;
@@ -94,7 +95,6 @@
             }
         }
 
-
         #endregion
 
         #endregion
@@ -106,6 +106,7 @@
             var input = new Input()
             {
                 Supplier = this.Supplier.Text,
+                IsDeleated = false,
             };
             var queryColumn = new List<String>() { "Material" };
             var inputResult = this.sqlHelper.Query<Input>(input, queryColumn);
@@ -146,7 +147,7 @@
         {
             if (String.IsNullOrEmpty(this.Count.Text) == false)
             {
-                Int32 currentCount = 0 ;
+                Int32 currentCount = 0;
                 if (Int32.TryParse(this.Count.Text, out currentCount) == false)
                 {
                     this.Count.Text = this.Count.Text.Remove(this.Count.Text.Length - 1, 1);
@@ -154,43 +155,48 @@
                 if (currentCount > this.CalculateCount())
                 {
                     this.Count.Text = this.Count.Text.Remove(this.Count.Text.Length - 1, 1);
+                    this.Count.SelectionStart = this.Count.Text.Length;
                 }
             }
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            if (this.Validate() == true)
+            var message = new PromptMessageBox();
+            if (message.ShowMessage(this.ToString()) == true)
             {
-                var inputIdentities = this.ObtainInputIdentity();
-                var tempCount = Convert.ToInt32(this.Count.Text);
-                foreach (var identity in inputIdentities)
+                if (this.Validate() == true)
                 {
-                    if (tempCount > 0)
+                    var inputIdentities = this.ObtainInputIdentity();
+                    var tempCount = Convert.ToInt32(this.Count.Text);
+                    foreach (var identity in inputIdentities)
                     {
-                        var tempIndentity = identity;
-                        var count = this.CalculateInputLaveCount(ref tempIndentity);
-                        if (count > 0)
+                        if (tempCount > 0)
                         {
-                            Int32 realCount = tempCount > count ? count : tempCount;
-                            tempCount -= realCount;
-                            if (this.InsertOutput(ref tempIndentity, ref realCount) == false)
+                            var tempIndentity = identity;
+                            var count = this.CalculateInputLaveCount(ref tempIndentity);
+                            if (count > 0)
                             {
-                                this.mainWindow.WindowsStatus = MessageEnum.OutputError;
-                                MessageBox.Show("检出失败", "警告", MessageBoxButton.OK, MessageBoxImage.Warning);
-                                break;
+                                Int32 realCount = tempCount > count ? count : tempCount;
+                                tempCount -= realCount;
+                                if (this.InsertOutput(ref tempIndentity, ref realCount) == false)
+                                {
+                                    this.mainWindow.WindowsStatus = MessageEnum.OutputError;
+                                    MessageBox.Show("检出失败", "警告", MessageBoxButton.OK, MessageBoxImage.Warning);
+                                    break;
+                                }
                             }
                         }
                     }
+                    this.mainWindow.WindowsStatus = MessageEnum.OutputSuccess;
+                    MessageBox.Show("检出成功", "提示", MessageBoxButton.OK);
                 }
-                this.mainWindow.WindowsStatus = MessageEnum.OutputSuccess;
-                MessageBox.Show("检出成功", "提示", MessageBoxButton.OK);
-            }
-            else
-            {
-                Logger.Error("数据验证失败");
-                this.mainWindow.WindowsStatus = MessageEnum.OutputFailed;
-                MessageBox.Show("检出失败", "警告", MessageBoxButton.OK, MessageBoxImage.Warning);
+                else
+                {
+                    Logger.Error("数据验证失败");
+                    this.mainWindow.WindowsStatus = MessageEnum.OutputFailed;
+                    MessageBox.Show("检出失败", "警告", MessageBoxButton.OK, MessageBoxImage.Warning);
+                }
             }
         }
 
@@ -202,10 +208,10 @@
                 Count = materialCount,
                 OutputDate = this.StartDate.SelectedDate != null ?
                              this.StartDate.SelectedDate?.ToString("yyyy-MM-dd HH-mm-ss:ffffff") :
-                             DateTime.Now.ToString("yyyy-MM-dd HH-mm-ss:ffffff"),
-                //BillArchive = this.BillArchive.Text,
+                             DateTime.Now.ToString("yyyy-MM-dd HH-mm-ss:ffffff"),                
                 Pickup = this.Pickup.Text,
                 Input = inputIdentity,
+                IsDeleated = false,
             };
             result = this.sqlHelper.Insert<Output>(output);
             return result;
@@ -226,6 +232,7 @@
                 {
                     Supplier = this.Supplier.Text,
                     Material = material.Identity,
+                    IsDeleated = false,
                 };
                 var inputResult = this.sqlHelper.Query<Input>(input);
                 foreach (var item in inputResult)
@@ -243,10 +250,12 @@
             Int32 result = 0;
             var inputResult = this.sqlHelper.Query<Input>(new Input()
             {
+                IsDeleated = false,
                 Identity = inputIdentity,
             });
             var outputResult = this.sqlHelper.Query<Output>(new Output()
             {
+                IsDeleated = false,
                 Input = inputIdentity,
             });
             foreach (var input in inputResult)
@@ -320,7 +329,7 @@
                    (String.IsNullOrEmpty(this.Material.Text) == false) &&
                    (String.IsNullOrEmpty(this.Model.Text) == false) &&
                    (String.IsNullOrEmpty(this.Pickup.Text) == false) &&
-                   (String.IsNullOrEmpty(this.Count.Text) == false);                   
+                   (String.IsNullOrEmpty(this.Count.Text) == false);
         }
 
         #region NotifyEnevt
@@ -346,5 +355,18 @@
         private Timer timer = new Timer(100);
         private MainWindow mainWindow;
         #endregion
+
+
+        public override String ToString()
+        {
+            StringBuilder result = new StringBuilder();
+            result.Append("出库时间: ").Append(this.StartDate.SelectedDate?.ToShortDateString()).Append(Environment.NewLine);
+            result.Append("出库类别: ").Append(this.Supplier.Text).Append(Environment.NewLine);
+            result.Append("出库材料: ").Append(this.Material.Text).Append(Environment.NewLine);
+            result.Append("材料规格: ").Append(this.Model.Text).Append(Environment.NewLine);
+            result.Append("出库数量: ").Append(this.Count.Text).Append(Environment.NewLine);
+            result.Append("取货人: ").Append(this.Pickup.Text).Append(Environment.NewLine);
+            return result.ToString();
+        }
     }
 }

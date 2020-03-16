@@ -16,5 +16,6 @@ namespace InOutManagement.Common
         OutputSuccess,
         OutputError,
         OutputFailed,
+        ImportSuccessful,
     }
 }

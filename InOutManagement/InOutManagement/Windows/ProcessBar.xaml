@@ -1,0 +1,27 @@
+﻿<Window x:Class="InOutManagement.Windows.ProcessBar"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:InOutManagement.Windows"
+        mc:Ignorable="d"
+        Title="正在导出..." 
+        Height="130" 
+        Width="500"
+        Style="{DynamicResource ProcessBarStyle}"
+        WindowStartupLocation="CenterScreen"  
+        Background="Transparent" 
+        Icon="../Resources/Icons/Import.ico"
+        >
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../Resources/Styles/ProgressBarStyle.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+    <StackPanel Orientation="Vertical" VerticalAlignment="Center" HorizontalAlignment="Center">
+        <TextBlock Text="{Binding Message}"  HorizontalAlignment="Center" FontFamily="Kristen ITC" FontSize="18" FontWeight="Bold" Foreground="#ff4c00" Margin="5"/>
+        <ProgressBar Maximum="1" Minimum="0" Value="{Binding Schedule}"  Width="360" Height="30" Margin="10"/>
+    </StackPanel>
+</Window>

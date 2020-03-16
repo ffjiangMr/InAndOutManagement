@@ -6,6 +6,7 @@
     using InOutManagement.Windows;
 
     using System;
+    using System.Windows;
     using System.Windows.Input;
 
     #endregion
@@ -37,7 +38,11 @@
 
         public void Execute(object parameter)
         {
-            MainWindow.GetInstance().Close();
+            Window window = parameter as Window;
+            if (window != null)
+            {
+                window.Close();
+            }            
         }
     }
 }

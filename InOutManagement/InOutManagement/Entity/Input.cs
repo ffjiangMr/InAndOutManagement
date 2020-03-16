@@ -23,6 +23,8 @@
         public String BillArchive { get; set; }
 
         public String Supplier { get; set; }
+
+        public Boolean IsDeleated  { get; set; }
     }
 }
 

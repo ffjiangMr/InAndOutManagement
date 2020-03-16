@@ -27,6 +27,8 @@
 
         public String Pickup { get; set; }
 
-        public String Status { get; set; }        
+        public String Status { get; set; }
+        
+        public Int32 Identity { get; set; }
     }
 }
