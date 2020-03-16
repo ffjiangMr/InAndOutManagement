@@ -22,6 +22,8 @@
     using System.Windows;
     using System.Windows.Controls;
 
+    using System.Linq;
+
 
     #endregion
     public partial class QueryView : INotifyPropertyChanged
@@ -37,6 +39,7 @@
 
         private void Query(object sender, RoutedEventArgs e)
         {
+
             this.ViewList.Clear();
             var query = new Query()
             {
@@ -47,7 +50,8 @@
                 Pickup = String.IsNullOrEmpty(this.Pickup.Text) == false ? this.Pickup.Text : String.Empty,
             };
             var queryResult = this.sqlHelper.Query<Query>(query);
-            foreach (var item in queryResult)
+            var temp = queryResult.OrderBy(rsult => rsult.Date);
+            foreach (var item in temp)
             {
                 if (this.FilterData(item) == false)
                 {
@@ -205,7 +209,7 @@
                 filePath = filePath.Contains(".xlsx") == false ? filePath + ".xlsx" : filePath;
                 FileInfo file = new FileInfo(filePath);
                 excel.SaveAs(file);
-            }            
+            }
             this.mainWindow.WindowsStatus = MessageEnum.ImportSuccessful;
             MessageBox.Show("导出完成.", "提示", MessageBoxButton.OK);
         }
