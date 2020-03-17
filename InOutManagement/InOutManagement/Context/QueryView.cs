@@ -124,7 +124,7 @@
                 var queryResult = this.sqlHelper.Query<Query>(query);
                 var temp = queryResult.OrderBy(rsult => rsult.Date);                
                 this.Dispatcher.Invoke(new Action(() =>
-                {
+                { 
                     this.ViewList.Clear();
                     foreach (var item in temp)
                     {
