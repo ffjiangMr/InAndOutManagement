@@ -37,10 +37,80 @@
 
         public event PropertyChangedEventHandler PropertyChanged;
 
+        private Visibility loadingVisibility = Visibility.Hidden;
+        public Visibility LadingVisibility
+        {
+            get
+            {
+                return this.loadingVisibility;
+            }
+            set
+            {
+                this.loadingVisibility = value;
+                this.OnPropertyChanged("LadingVisibility");
+            }
+        }
+
+
+
+        private String materialText = String.Empty;
+        public String MaterialText
+        {
+            get
+            {
+                return this.materialText;
+            }
+            set
+            {
+                this.materialText = value;
+                this.OnPropertyChanged("MaterialText");
+            }
+        }
+
+        private String modelText = String.Empty;
+        public String ModelText
+        {
+            get
+            {
+                return this.modelText;
+            }
+            set
+            {
+                this.modelText = value;
+                this.OnPropertyChanged("ModelText");
+            }
+        }
+
+        private String pickupText = String.Empty;
+        public String PickupText
+        {
+            get
+            {
+                return this.pickupText;
+            }
+            set
+            {
+                this.pickupText = value;
+                this.OnPropertyChanged("PickupText");
+            }
+        }
+
+        private void UpdateLoading(Visibility visibility)
+        {
+            Task task = new Task(() =>
+            {
+                this.Dispatcher.Invoke(new Action(() =>
+                {
+                    this.LadingVisibility = visibility;
+
+                }));
+            });
+            task.Start();
+        }
+
         private void Query(object sender, RoutedEventArgs e)
         {
-
-            this.ViewList.Clear();
+            this.UpdateLoading(Visibility.Visible);
             var query = new Query()
             {
                 Supplier = String.IsNullOrEmpty(this.Supplier.Text) == false ? this.Supplier.Text : String.Empty,
@@ -49,28 +119,38 @@
                 Model = String.IsNullOrEmpty(this.Model.Text) == false ? this.Model.Text : String.Empty,
                 Pickup = String.IsNullOrEmpty(this.Pickup.Text) == false ? this.Pickup.Text : String.Empty,
             };
-            var queryResult = this.sqlHelper.Query<Query>(query);
-            var temp = queryResult.OrderBy(rsult => rsult.Date);
-            foreach (var item in temp)
+            Task task = new Task(() =>
             {
-                if (this.FilterData(item) == false)
+                var queryResult = this.sqlHelper.Query<Query>(query);
+                var temp = queryResult.OrderBy(rsult => rsult.Date);                
+                this.Dispatcher.Invoke(new Action(() =>
                 {
-                    this.ViewList.Add(new Query()
+                    this.ViewList.Clear();
+                    foreach (var item in temp)
                     {
-                        Count = item.Count,
-                        Date = item.Date.Substring(0, 10),
-                        Model = item.Model,
-                        Name = item.Name,
-                        Price = item.Price,
-                        Status = item.Status,
-                        Supplier = item.Supplier,
-                        Unit = item.Unit,
-                        Pickup = item.Pickup,
-                        Identity = item.Identity,
-                    });
-                }
-            }
-            this.mainWindow.WindowsStatus = MessageEnum.QuerySuccessful;
+                        if (this.FilterData(item) == false)
+                        {
+                            var entity = new Query()
+                            {
+                                Count = item.Count,
+                                Date = item.Date.Substring(0, 10),
+                                Model = item.Model,
+                                Name = item.Name,
+                                Price = item.Price,
+                                Status = item.Status,
+                                Supplier = item.Supplier,
+                                Unit = item.Unit,
+                                Pickup = item.Pickup,
+                                Identity = item.Identity,
+                            };
+                            this.ViewList.Add(entity);
+                        }
+                    }
+                }));
+                this.UpdateLoading(Visibility.Hidden);
+                this.mainWindow.WindowsStatus = MessageEnum.QuerySuccessful;
+            });                                    
+            task.Start();
         }
 
         private Boolean FilterData(Query query)
@@ -139,12 +219,93 @@
 
         private void Material_DropDownOpened(object sender, EventArgs e)
         {
+            var temp = this.MaterialText;
+            this.isMaterialClear = true;
             this.MaterialList.Clear();
             var materials = this.sqlHelper.Query<Material>(new Material());
             foreach (var item in materials)
             {
+                if (item.Name.Contains(temp.Trim()) == false)
+                {
+                    continue;
+                }
                 this.MaterialList.Add(item.Name);
             }
+            this.isMaterialClear = false;
+            this.Material.Text = temp;
+        }
+
+        private void SetMaterialEvent()
+        {
+            var materialContent = (TextBox)this.Material.Template.FindName("ComboBoxContent", this.Material);
+            if (materialContent != null)
+            {
+                materialContent.TextChanged += delegate (object sender, TextChangedEventArgs e)
+                {
+                    var text = (TextBox)sender;
+                    if (this.isMaterialClear == false)
+                    {
+                        if ((this.MaterialText != text.Text))
+                        {
+                            this.MaterialText = text.Text;
+                            this.Material_DropDownOpened(null, null);
+                        }
+                    }
+                    text.SelectionStart = text.Text.Length;
+                    this.isMaterialClear = false;
+                };
+            }
+        }
+
+        private void SetModelEvent()
+        {
+            var modelContent = (TextBox)this.Model.Template.FindName("ComboBoxContent", this.Model);
+            if (modelContent != null)
+            {
+                modelContent.TextChanged += delegate (object sender, TextChangedEventArgs e)
+                {
+                    var text = (TextBox)sender;
+                    if (this.isModelClear == false)
+                    {
+                        if (this.ModelText != text.Text)
+                        {
+                            this.ModelText = text.Text;
+                            this.Model_DropDownOpened(null, null);
+                        }
+                    }
+                    text.SelectionStart = text.Text.Length;
+                    this.isModelClear = false;
+                };
+            }
+        }
+
+        private void SetPickupEvent()
+        {
+            var pickupContent = (TextBox)this.Pickup.Template.FindName("ComboBoxContent", this.Pickup);
+            if (pickupContent != null)
+            {
+                pickupContent.TextChanged += delegate (object sender, TextChangedEventArgs e)
+                {
+                    var text = (TextBox)sender;
+                    if (this.isPickupClear == false)
+                    {
+                        if (this.PickupText != text.Text)
+                        {
+                            this.PickupText = text.Text;
+                            this.Pickup_DropDownOpened(null, null);
+                        }
+                    }
+                    text.SelectionStart = text.Text.Length;
+                    this.isPickupClear = false;
+                };
+            }
+        }
+
+        private void Initial()
+        {
+            this.SetMaterialEvent();
+            this.SetModelEvent();
+            this.SetPickupEvent();
         }
 
         public void OnPropertyChanged(String propertyName)
@@ -158,22 +319,38 @@
 
         private void Model_DropDownOpened(object sender, EventArgs e)
         {
+            var temp = this.ModelText;
+            this.isModelClear = true;
             this.ModelList.Clear();
             var materials = this.sqlHelper.Query<Material>(new Material() { Name = this.Material.Text });
             foreach (var item in materials)
             {
+                if (item.Name.Contains(temp.Trim()) == false)
+                {
+                    continue;
+                }
                 this.ModelList.Add(item.Name);
             }
+            this.isModelClear = false;
+            this.Model.Text = temp;
         }
 
         private void Pickup_DropDownOpened(object sender, EventArgs e)
         {
+            var temp = this.PickupText;
+            this.isPickupClear = true;
             this.PickuplList.Clear();
             var materials = this.sqlHelper.Query<Output>(new Output() { IsDeleated = false, });
             foreach (var item in materials)
             {
+                if (item.Pickup.Contains(temp.Trim()) == false)
+                {
+                    continue;
+                }
                 this.PickuplList.Add(item.Pickup);
             }
+            this.isPickupClear = false;
+            this.Pickup.Text = temp;
         }
 
         private void Import_Click(object sender, RoutedEventArgs e)
@@ -357,6 +534,12 @@
         private Int32 current = 0;
         private String message = String.Empty;
         private bool isImported = false;
+        /// 下拉框下拉获取数据，清空数据导致Text Changed触发
+        /// 在TextChanged 事件动态过滤触发下拉事件
+        /// 为防止无限递归，保证数据准确设置此控制
+        private Boolean isMaterialClear = false;
+        private Boolean isModelClear = false;
+        private Boolean isPickupClear = false;
 
         public delegate void UpdateProcess(String message, Double process);
         public event UpdateProcess UpdateProcesEvent;

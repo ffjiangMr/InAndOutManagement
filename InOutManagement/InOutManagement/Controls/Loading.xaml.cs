@@ -1,5 +1,4 @@
-﻿using InOutManagement.Windows;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,19 +15,13 @@ using System.Windows.Shapes;
 namespace InOutManagement.Controls
 {
     /// <summary>
-    /// Interaction logic for QueryView.xaml
+    /// Interaction logic for Loading.xaml
     /// </summary>
-    public partial class QueryView : UserControl
+    public partial class Loading : UserControl
     {
-        public QueryView()
+        public Loading()
         {
             InitializeComponent();
-            this.DataContext = this;
-            this.Loaded += delegate
-            {
-                this.Initial();
-                this.mainWindow = MainWindow.GetInstance();
-            };
         }
     }
 }

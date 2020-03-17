@@ -70,6 +70,9 @@
             <Grid Grid.Column="6" Name="column6"/>
             <Grid Grid.Column="7" Name="column7"/>
             <Grid Grid.Column="8" Name="column8"/>
+            <StackPanel Name="Loding" Visibility="{Binding LadingVisibility}" Grid.Row="0" Grid.RowSpan="2" Grid.ColumnSpan="9" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <local:Loading x:Name="Loading" />
+            </StackPanel>
             <ListView x:Name="QueryListView" VerticalAlignment="Top" HorizontalAlignment="Center" BorderThickness="0" Grid.ColumnSpan="9" FontFamily="Kristen ITC" Background="Transparent" FontSize="26" FontWeight="Bold" Foreground="#ff4c00" ItemsSource="{Binding ViewList}" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
                 <ListView.View>
                     <GridView AllowsColumnReorder="True" >
