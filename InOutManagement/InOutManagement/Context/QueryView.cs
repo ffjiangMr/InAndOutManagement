@@ -37,7 +37,7 @@
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private Visibility loadingVisibility = Visibility.Hidden;
+        private Visibility loadingVisibility = Visibility.Visible;
         public Visibility LadingVisibility
         {
             get
