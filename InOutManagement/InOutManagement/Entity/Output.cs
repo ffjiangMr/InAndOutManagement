@@ -15,7 +15,7 @@
 
         public Int32 Input { get; set; }
 
-        public Int32 Count { get; set; }
+        public Double Count { get; set; }
 
         public String OutputDate { get; set; }
 

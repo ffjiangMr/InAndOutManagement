@@ -147,8 +147,8 @@
         {
             if (String.IsNullOrEmpty(this.Count.Text) == false)
             {
-                Int32 currentCount = 0;
-                if (Int32.TryParse(this.Count.Text, out currentCount) == false)
+                Double currentCount = 0;
+                if (Double.TryParse(this.Count.Text, out currentCount) == false)
                 {
                     this.Count.Text = this.Count.Text.Remove(this.Count.Text.Length - 1, 1);
                 }
@@ -168,7 +168,7 @@
                 if (this.Validate() == true)
                 {
                     var inputIdentities = this.ObtainInputIdentity();
-                    var tempCount = Convert.ToInt32(this.Count.Text);
+                    var tempCount = Convert.ToDouble(this.Count.Text);
                     foreach (var identity in inputIdentities)
                     {
                         if (tempCount > 0)
@@ -177,7 +177,7 @@
                             var count = this.CalculateInputLaveCount(ref tempIndentity);
                             if (count > 0)
                             {
-                                Int32 realCount = tempCount > count ? count : tempCount;
+                                Double realCount = tempCount > count ? count : tempCount;
                                 tempCount -= realCount;
                                 if (this.InsertOutput(ref tempIndentity, ref realCount) == false)
                                 {
@@ -200,7 +200,7 @@
             }
         }
 
-        private Boolean InsertOutput(ref Int32 inputIdentity, ref Int32 materialCount)
+        private Boolean InsertOutput(ref Int32 inputIdentity, ref Double materialCount)
         {
             Boolean result = false;
             var output = new Output()
@@ -244,10 +244,10 @@
             return result;
         }
 
-        private Int32 CalculateInputLaveCount(ref Int32 inputIdentity)
+        private Double CalculateInputLaveCount(ref Int32 inputIdentity)
         {
             Logger.Info("Func in.");
-            Int32 result = 0;
+            Double result = 0;
             var inputResult = this.sqlHelper.Query<Input>(new Input()
             {
                 IsDeleated = false,
@@ -270,9 +270,9 @@
             return result;
         }
 
-        private Int32 CalculateCount()
+        private Double CalculateCount()
         {
-            Int32 result = 0;
+            Double result = 0;
             if (String.IsNullOrEmpty(this.Model.Text) == false)
             {
                 var inputIdentities = this.ObtainInputIdentity();

@@ -15,7 +15,7 @@
 
         public Int32 Material  { get; set; }
 
-        public Int32 Count { get; set; }
+        public Double Count { get; set; }
 
         public Double Amount { get; set; }
     }

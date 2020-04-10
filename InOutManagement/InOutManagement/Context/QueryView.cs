@@ -37,7 +37,7 @@
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private Visibility loadingVisibility = Visibility.Visible;
+        private Visibility loadingVisibility = Visibility.Hidden;
         public Visibility LadingVisibility
         {
             get
@@ -501,10 +501,10 @@
             }
         }
 
-        private Int32 CalculateInputLaveCount(ref Int32 inputIdentity)
+        private Double CalculateInputLaveCount(ref Int32 inputIdentity)
         {
             Logger.Info("Func in.");
-            Int32 result = 0;
+            Double result = 0;
             var inputResult = this.sqlHelper.Query<Input>(new Input()
             {
                 IsDeleated = false,

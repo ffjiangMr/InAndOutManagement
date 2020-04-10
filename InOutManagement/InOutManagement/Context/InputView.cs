@@ -187,7 +187,7 @@
         {
             if (String.IsNullOrEmpty(this.Count.Text) == false)
             {
-                if (Int32.TryParse(this.Count.Text, out _) == false)
+                if (Double.TryParse(this.Count.Text, out _) == false)
                 {
                     this.Count.Text = this.Count.Text.Remove(this.Count.Text.Length - 1, 1);
                     this.Count.SelectionStart = this.Count.Text.Length;

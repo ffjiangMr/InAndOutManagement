@@ -23,7 +23,7 @@
 
         public Double Price { get; set; }
 
-        public Int32 Count { get; set; }
+        public Double Count { get; set; }
 
         public String Pickup { get; set; }
 

@@ -1,7 +1,7 @@
 ﻿create table "Input"("Identity" integer primary key autoincrement,
                      "InputDate" text not null,
                      "Material" integer not null,
-                     "Count" integer not null,
+                     "Count" real not null,
                      "Price" real not null,
                      "BillArchive" text,
                      "Supplier" text not null,
@@ -9,7 +9,7 @@
 
 create table "Output"("Identity" integer primary key autoincrement,
                       "Input" integer not null,
-                      "Count" integer not null,
+                      "Count" real not null,
                       "OutputDate" text not null,                                            
                       "Pickup" text not null, 
                       "BillArchive" text ,
