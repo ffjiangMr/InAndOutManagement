@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:input="clr-namespace:System.Windows.Input;assembly=PresentationCore"
              xmlns:local="clr-namespace:InOutManagement.Controls"
              mc:Ignorable="d"
              Style="{DynamicResource pageStyle}"
@@ -43,11 +44,11 @@
             </StackPanel>
             <StackPanel Margin="15" Orientation="Horizontal"  VerticalAlignment="Center" HorizontalAlignment="Center">
                 <TextBlock Text="数量"  Margin="10, 0" FontFamily="Kristen ITC" FontSize="18" FontWeight="Bold" Foreground="#ff4c00" />
-                <TextBox TextChanged="Count_TextChanged" Name="Count" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="10,0" Width="200" FontFamily="Kristen ITC" FontSize="18" FontWeight="Bold" Foreground="#ff4c00" MaxLength="50"/>
+                <TextBox input:InputMethod.IsInputMethodEnabled="False" TextChanged="Count_TextChanged" Name="Count" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="10,0" Width="200" FontFamily="Kristen ITC" FontSize="18" FontWeight="Bold" Foreground="#ff4c00" MaxLength="50"/>
             </StackPanel>
             <StackPanel Margin="15" Orientation="Horizontal"  VerticalAlignment="Center" HorizontalAlignment="Center">
                 <TextBlock Text="价格"  Margin="10,0" FontFamily="Kristen ITC" FontSize="18" FontWeight="Bold" Foreground="#ff4c00" />
-                <TextBox TextChanged="Price_TextChanged" Name="Price" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="10,0" Width="200" FontFamily="Kristen ITC" FontSize="18" FontWeight="Bold" Foreground="#ff4c00" MaxLength="50"/>
+                <TextBox input:InputMethod.IsInputMethodEnabled="False" TextChanged="Price_TextChanged" Name="Price" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="10,0" Width="200" FontFamily="Kristen ITC" FontSize="18" FontWeight="Bold" Foreground="#ff4c00" MaxLength="50"/>
             </StackPanel>
             <StackPanel Orientation="Horizontal"  VerticalAlignment="Center" HorizontalAlignment="Center">
                 <Button Margin="60,15,0,0" Style="{DynamicResource ButtonStyle}" Content="录入" Click="Button_Click" />

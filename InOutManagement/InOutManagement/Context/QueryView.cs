@@ -38,6 +38,7 @@
         public event PropertyChangedEventHandler PropertyChanged;
 
         private Visibility loadingVisibility = Visibility.Hidden;
+
         public Visibility LadingVisibility
         {
             get
@@ -50,8 +51,6 @@
                 this.OnPropertyChanged("LadingVisibility");
             }
         }
-
-
 
         private String materialText = String.Empty;
         public String MaterialText
