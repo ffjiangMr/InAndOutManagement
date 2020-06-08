@@ -14,7 +14,7 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
-    <Grid >
+    <Grid x:Name="gridRoot">
         <Grid.RowDefinitions>
             <RowDefinition Height="1.5*"/>
             <RowDefinition Height="10*"/>
@@ -49,17 +49,18 @@
             </StackPanel>
             <Button Grid.Column="2"  Margin="0,5,10,5" Style="{DynamicResource ButtonStyle}" Content="搜索" Click="Query" />
         </Grid>
-        <Grid Grid.Row="1" >
+        <Grid Grid.Row="1" Width="{Binding ElementName=gridRoot,Path=ActualWidth}" >
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="1.3*"/>
-                <ColumnDefinition Width="0.7*"/>
-                <ColumnDefinition Width="2*"/>
-                <ColumnDefinition Width="2*"/>
-                <ColumnDefinition Width="0.7*"/>
-                <ColumnDefinition Width="1*"/>
-                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1.1*"/>
+                <ColumnDefinition Width="0.8*"/>
                 <ColumnDefinition Width="1.6*"/>
-                <ColumnDefinition Width="0.7*"/>
+                <ColumnDefinition Width="1.6*"/>
+                <ColumnDefinition Width="0.6*"/>
+                <ColumnDefinition Width="0.8*"/>
+                <ColumnDefinition Width="0.8*"/>
+                <ColumnDefinition Width="1.1*"/>
+                <ColumnDefinition Width="1.1*"/>
+                <ColumnDefinition Width="0.8*"/>
             </Grid.ColumnDefinitions>
             <Grid Grid.Column="0" Name="column0"/>
             <Grid Grid.Column="1" Name="column1"/>
@@ -70,10 +71,11 @@
             <Grid Grid.Column="6" Name="column6"/>
             <Grid Grid.Column="7" Name="column7"/>
             <Grid Grid.Column="8" Name="column8"/>
-            <StackPanel Name="Loding" Visibility="{Binding LadingVisibility}" Grid.Row="0" Grid.RowSpan="2" Grid.ColumnSpan="9" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <Grid Grid.Column="9" Name="column9"/>
+            <StackPanel Name="Loding" Visibility="{Binding LadingVisibility}" Grid.ColumnSpan="10" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center">
                 <local:Loading x:Name="Loading" />
             </StackPanel>
-            <ListView x:Name="QueryListView" VerticalAlignment="Top" HorizontalAlignment="Center" BorderThickness="0" Grid.ColumnSpan="9" FontFamily="Kristen ITC" Background="Transparent" FontSize="26" FontWeight="Bold" Foreground="#ff4c00" ItemsSource="{Binding ViewList}" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+            <ListView  x:Name="QueryListView" VerticalAlignment="Top" HorizontalAlignment="Center" BorderThickness="0" Grid.ColumnSpan="10" FontFamily="Kristen ITC" Background="Transparent" FontSize="26" FontWeight="Bold" Foreground="#ff4c00" ItemsSource="{Binding ViewList}" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
                 <ListView.View>
                     <GridView AllowsColumnReorder="True" >
                         <GridViewColumn Width="{Binding ElementName=column0,Path=ActualWidth}" Header="时间" DisplayMemberBinding="{Binding Date}"/>
@@ -83,8 +85,9 @@
                         <GridViewColumn Width="{Binding ElementName=column4,Path=ActualWidth}" Header="单位" DisplayMemberBinding="{Binding Unit}"/>
                         <GridViewColumn Width="{Binding ElementName=column5,Path=ActualWidth}" Header="价格" DisplayMemberBinding="{Binding Price}"/>
                         <GridViewColumn Width="{Binding ElementName=column6,Path=ActualWidth}" Header="数量" DisplayMemberBinding="{Binding Count}"/>
-                        <GridViewColumn Width="{Binding ElementName=column7,Path=ActualWidth}" Header="出货人" DisplayMemberBinding="{Binding Pickup}"/>
-                        <GridViewColumn Width="{Binding ElementName=column8,Path=ActualWidth}" Header="状态" DisplayMemberBinding="{Binding Status}"/>
+                        <GridViewColumn Width="{Binding ElementName=column7,Path=ActualWidth}" Header="仓库" DisplayMemberBinding="{Binding Warehouse}"/>
+                        <GridViewColumn Width="{Binding ElementName=column8,Path=ActualWidth}" Header="出货人" DisplayMemberBinding="{Binding Pickup}"/>
+                        <GridViewColumn Width="{Binding ElementName=column9,Path=ActualWidth}" Header="状态" DisplayMemberBinding="{Binding Status}"/>
                     </GridView>
                 </ListView.View>
                 <ListView.ContextMenu>

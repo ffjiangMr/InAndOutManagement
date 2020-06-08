@@ -15,6 +15,8 @@
 
         public Int32 Input { get; set; }
 
+        public Int32 Warehouse { get; set; }
+
         public Double Count { get; set; }
 
         public String OutputDate { get; set; }

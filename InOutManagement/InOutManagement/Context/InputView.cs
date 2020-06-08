@@ -124,6 +124,26 @@
 
         #endregion
 
+        #region Warehouse
+
+        private String warehouseText = String.Empty;
+        public String WarehouseText
+        {
+            get
+            {
+                return this.warehouseText;
+            }
+            set
+            {
+                this.warehouseText = value;
+                this.OnPropertyChanged("WarehouseText");
+            }
+        }
+
+        public ObservableCollection<String> WarehouseList { get; set; } = new ObservableCollection<String>();
+
+        #endregion
+
         #endregion
 
         #region Notify Event 
@@ -169,9 +189,9 @@
                 var models = this.sqlHelper.Query<Material>(new Material() { Name = this.MaterialText });
                 foreach (var item in models)
                 {
-                    if (String.IsNullOrEmpty(this.modelText.Trim()) == false)
+                    if (String.IsNullOrEmpty(this.ModelText.Trim()) == false)
                     {
-                        if (item.Name.Contains(this.modelText.Trim()) == false)
+                        if (item.Name.Contains(this.ModelText.Trim()) == false)
                         {
                             continue;
                         }
@@ -181,6 +201,31 @@
             }
             this.isModelClear = false;
             this.Model.Text = temp;
+        }
+
+        private void Warehouse_DropDownOpened(object sender, EventArgs e)
+        {
+            var temp = this.WarehouseText;
+            this.isWarehouseClear = true;
+            this.WarehouseList.Clear();
+            if ((String.IsNullOrEmpty(this.Material.Text) == false) &&
+                (String.IsNullOrEmpty(this.Model.Text) == false))
+            {
+                var warehouses = this.sqlHelper.Query<Warehouse>(new Warehouse() { IsDeleated = false });
+                foreach (var item in warehouses)
+                {
+                    if (String.IsNullOrEmpty(this.WarehouseText.Trim()) == false)
+                    {
+                        if (item.Name.Contains(this.WarehouseText.Trim()) == false)
+                        {
+                            continue;
+                        }
+                    }
+                    this.WarehouseList.Add(item.Name);
+                }
+            }
+            this.isWarehouseClear = false;
+            this.Warehouse.Text = temp;
         }
 
         private void Count_TextChanged(object sender, TextChangedEventArgs e)
@@ -214,7 +259,7 @@
             {
                 if (this.Validate() == true)
                 {
-                    if (InsertMaterial() && InsertInput())
+                    if (this.InsertMaterial()&& this.InsertWarehouse() && this.InsertInput())
                     {
                         this.mainWindow.WindowsStatus = MessageEnum.InsertSuccess;
                         MessageBox.Show("录入成功", "提示", MessageBoxButton.OK);
@@ -239,6 +284,7 @@
         {
             this.SetMaterialEvent();
             this.SetModelEvent();
+            this.SetWarehouseEvent();
         }
 
         private void SetMaterialEvent()
@@ -286,6 +332,28 @@
             }
         }
 
+        private void SetWarehouseEvent()
+        {
+            var warehouseContent = (TextBox)this.Warehouse.Template.FindName("ComboBoxContent", this.Warehouse);
+            if (warehouseContent != null)
+            {
+                warehouseContent.TextChanged += delegate (object sender, TextChangedEventArgs e)
+                {
+                    var text = (TextBox)sender;
+                    if (this.isWarehouseClear == false)
+                    {
+                        if (this.WarehouseText != text.Text)
+                        {
+                            this.WarehouseText = text.Text;
+                            this.Warehouse_DropDownOpened(null, null);
+                        }
+                    }
+                    text.SelectionStart = text.Text.Length;
+                    this.isWarehouseClear = false;
+                };
+            }
+        }
+
         private void SetCountText()
         {
             var material = new Material()
@@ -317,6 +385,22 @@
             return result;
         }
 
+        private Boolean InsertWarehouse()
+        {
+            Boolean result = true;
+            var warehouse = new Warehouse()
+            {
+                Name = this.WarehouseText.Trim(),
+                IsDeleated = false,
+            };
+            var queryResult = sqlHelper.Query<Warehouse>(warehouse);
+            if (queryResult?.Count == 0)
+            {
+                result = sqlHelper.Insert<Warehouse>(warehouse);
+            }
+            return result;
+        }
+
         private Boolean InsertInput()
         {
             Boolean result = false;
@@ -329,18 +413,28 @@
             var queryResult = sqlHelper.Query<Material>(material);
             if (queryResult.Count > 0)
             {
-                var input = new Input()
+                var warehouse = new Warehouse()
                 {
-                    Material = queryResult[0].Identity,
-                    Count = Convert.ToInt32(this.Count.Text.Trim()),
-                    InputDate = this.StartDate.SelectedDate != null ?
-                                 this.StartDate.SelectedDate?.ToString("yyyy-MM-dd HH-mm-ss:ffffff") :
-                                 DateTime.Now.ToString("yyyy-MM-dd HH-mm-ss:ffffff"),
-                    Price = Convert.ToDouble(this.Price.Text.Trim()),
-                    Supplier = this.Supplier.Text.Trim(),
+                    Name = this.WarehouseText.Trim(),
                     IsDeleated = false,
                 };
-                result = this.sqlHelper.Insert<Input>(input);
+                var queryWarehouseResult = sqlHelper.Query<Warehouse>(warehouse);
+                if (queryWarehouseResult.Count > 0)
+                {
+                    var input = new Input()
+                    {
+                        Material = queryResult[0].Identity,
+                        Count = Convert.ToInt32(this.Count.Text.Trim()),
+                        InputDate = this.StartDate.SelectedDate != null ?
+                                     this.StartDate.SelectedDate?.ToString("yyyy-MM-dd HH-mm-ss:ffffff") :
+                                     DateTime.Now.ToString("yyyy-MM-dd HH-mm-ss:ffffff"),
+                        Price = Convert.ToDouble(this.Price.Text.Trim()),
+                        Supplier = this.Supplier.Text.Trim(),
+                        Warehouse = queryWarehouseResult[0].Identity,
+                        IsDeleated = false,
+                    };
+                    result = this.sqlHelper.Insert<Input>(input);
+                }
             }
             return result;
         }
@@ -350,6 +444,7 @@
             return (String.IsNullOrEmpty(this.Supplier.Text) == false) &&
                    (String.IsNullOrEmpty(this.Material.Text) == false) &&
                    (String.IsNullOrEmpty(this.Model.Text) == false) &&
+                   (String.IsNullOrEmpty(this.Warehouse.Text) == false) &&
                    (String.IsNullOrEmpty(this.Count.Text) == false) &&
                    (String.IsNullOrEmpty(this.Unit.Text) == false) &&
                    (String.IsNullOrEmpty(this.Price.Text) == false);
@@ -364,6 +459,7 @@
         /// 为防止无限递归，保证数据准确设置此控制
         private Boolean isMaterialClear = false;
         private Boolean isModelClear = false;
+        private Boolean isWarehouseClear = false;
 
         private MainWindow mainWindow;
 
@@ -375,6 +471,7 @@
             result.Append("入库时间: ").Append(this.StartDate.SelectedDate?.ToShortDateString()).Append(Environment.NewLine);
             result.Append("入库类别: ").Append(this.Supplier.Text).Append(Environment.NewLine);
             result.Append("入库材料: ").Append(this.Material.Text).Append(Environment.NewLine);
+            result.Append("仓库名称: ").Append(this.Warehouse.Text).Append(Environment.NewLine);
             result.Append("材料规格: ").Append(this.Model.Text).Append(Environment.NewLine);
             result.Append("材料单位: ").Append(this.Unit.Text).Append(Environment.NewLine);
             result.Append("入库数量: ").Append(this.Count.Text).Append(Environment.NewLine);

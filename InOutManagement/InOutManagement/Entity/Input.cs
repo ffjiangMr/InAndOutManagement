@@ -18,6 +18,8 @@
 
         public Double Count { get; set; }
 
+        public Int32 Warehouse { get; set; }
+        
         public Double Price { get; set; }
 
         public String BillArchive { get; set; }

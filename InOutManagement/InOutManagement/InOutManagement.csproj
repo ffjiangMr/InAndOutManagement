@@ -106,6 +106,7 @@
     <Compile Include="Entity\Material.cs" />
     <Compile Include="Entity\Output.cs" />
     <Compile Include="Entity\Surplus.cs" />
+    <Compile Include="Entity\Warehouse.cs" />
     <Compile Include="ExtensionMethod\VisualHelper.cs" />
     <Compile Include="Resources\Message\MessageResource.Designer.cs">
       <AutoGen>True</AutoGen>

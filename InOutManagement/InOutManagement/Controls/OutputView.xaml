@@ -36,6 +36,10 @@
                 <TextBlock Text="规格"  FontFamily="Kristen ITC" Margin="10,0" FontSize="18" FontWeight="Bold" Foreground="#ff4c00" />
                 <ComboBox IsEditable="False" DropDownOpened="Model_DropDownOpened" Style="{DynamicResource ComboBoxStyle}" Name="Model" Margin="10,0" VerticalAlignment="Center" HorizontalAlignment="Center" Width="200" FontFamily="Kristen ITC" FontSize="18" FontWeight="Bold" Foreground="#ff4c00"/>
             </StackPanel>
+            <StackPanel Orientation="Horizontal" Margin="15"  VerticalAlignment="Center" HorizontalAlignment="Center">
+                <TextBlock Text="仓库"  FontFamily="Kristen ITC" Margin="10,0" FontSize="18" FontWeight="Bold" Foreground="#ff4c00" />
+                <ComboBox IsEditable="False" DropDownOpened="Warehouse_DropDownOpened" Style="{DynamicResource ComboBoxStyle}" Name="Warehouse" Margin="10,0" VerticalAlignment="Center" HorizontalAlignment="Center" Width="200" FontFamily="Kristen ITC" FontSize="18" FontWeight="Bold" Foreground="#ff4c00"/>
+            </StackPanel>
             <StackPanel Margin="30,15" Orientation="Horizontal"  VerticalAlignment="Center" HorizontalAlignment="Left">
                 <TextBlock Margin="287,0,10,0" Text="数量" FontFamily="Kristen ITC" FontSize="18" FontWeight="Bold" Foreground="#ff4c00" />
                 <TextBox input:InputMethod.IsInputMethodEnabled="False" TextChanged="Count_TextChanged" Name="Count" Margin="10,0" VerticalAlignment="Center" HorizontalAlignment="Center" Width="200" FontFamily="Kristen ITC" FontSize="18" FontWeight="Bold" Foreground="#ff4c00"/>

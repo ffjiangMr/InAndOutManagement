@@ -140,6 +140,7 @@
                                 Supplier = item.Supplier,
                                 Unit = item.Unit,
                                 Pickup = item.Pickup,
+                                Warehouse = item.Warehouse,
                                 Identity = item.Identity,
                             };
                             this.ViewList.Add(entity);
@@ -402,8 +403,9 @@
                 inputSheet.Cells[1, 3].Value = "材料";
                 inputSheet.Cells[1, 4].Value = "型号";
                 inputSheet.Cells[1, 5].Value = "单位";
-                inputSheet.Cells[1, 6].Value = "总数量";
+                inputSheet.Cells[1, 6].Value = "数量";
                 inputSheet.Cells[1, 7].Value = "剩余数量";
+                inputSheet.Cells[1, 8].Value = "仓库名";
                 Int32 rowNum = 2;
                 this.message = "导出录入信息";
                 this.total = this.ViewList.Count;
@@ -421,6 +423,7 @@
                         inputSheet.Cells[rowNum, 6].Value = item.Count;
                         Int32 inputIdentity = item.Identity;
                         inputSheet.Cells[rowNum, 7].Value = this.CalculateInputLaveCount(ref inputIdentity).ToString();
+                        inputSheet.Cells[rowNum, 8].Value = item.Warehouse;
                         rowNum++;
                     }
                 }
@@ -444,6 +447,7 @@
                 outputSheet.Cells[1, 5].Value = "单位";
                 outputSheet.Cells[1, 6].Value = "提取人";
                 outputSheet.Cells[1, 7].Value = "提取数量";
+                outputSheet.Cells[1, 8].Value = "仓库名称";
                 Int32 rowNum = 2;
                 foreach (var item in this.ViewList)
                 {
@@ -457,6 +461,7 @@
                         outputSheet.Cells[rowNum, 5].Value = item.Unit;
                         outputSheet.Cells[rowNum, 6].Value = item.Pickup;
                         outputSheet.Cells[rowNum, 7].Value = item.Count;
+                        outputSheet.Cells[rowNum, 8].Value = item.Warehouse;
                         rowNum++;
                     }
                 }
@@ -482,6 +487,7 @@
                 querySheet.Cells[1, 7].Value = "数量";
                 querySheet.Cells[1, 8].Value = "状态";
                 querySheet.Cells[1, 9].Value = "提取人";
+                querySheet.Cells[1, 10].Value = "仓库名称";
                 Int32 rowNum = 2;
                 foreach (var item in this.ViewList)
                 {
@@ -491,10 +497,11 @@
                     querySheet.Cells[rowNum, 3].Value = item.Name;
                     querySheet.Cells[rowNum, 4].Value = item.Model;
                     querySheet.Cells[rowNum, 5].Value = item.Unit;
-                    querySheet.Cells[rowNum, 6].Value = item.Pickup;
+                    querySheet.Cells[rowNum, 6].Value = item.Price;
                     querySheet.Cells[rowNum, 7].Value = item.Count;
                     querySheet.Cells[rowNum, 8].Value = item.Status;
                     querySheet.Cells[rowNum, 9].Value = item.Pickup;
+                    querySheet.Cells[rowNum, 10].Value = item.Warehouse;
                     rowNum++;
                 }
             }

@@ -9,7 +9,7 @@
     using InOutManagement.Windows;
 
     using log4net;
-
+    using OfficeOpenXml.ConditionalFormatting;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
@@ -72,6 +72,7 @@
             {
                 return (String.IsNullOrEmpty(this.Supplier.Text) == false) &&
                        (String.IsNullOrEmpty(this.Material.Text) == false) &&
+                       (String.IsNullOrEmpty(this.Warehouse.Text) == false) &&
                        (String.IsNullOrEmpty(this.Model.Text) == false) ?
                        Visibility.Visible :
                        Visibility.Hidden;
@@ -143,6 +144,51 @@
             this.Model.Text = tempText;
         }
 
+        private void Warehouse_DropDownOpened(object sender, EventArgs e)
+        {
+            this.isWarehouseClear = true;
+            var tempText = this.Warehouse.Text;
+            this.Warehouse.Items.Clear();
+            if ((String.IsNullOrEmpty(this.Material.Text) == false) &&
+                (String.IsNullOrEmpty(this.Model.Text) == false))
+            {
+                var materialResult = this.sqlHelper.Query<Material>(
+                    new Material()
+                    {
+                        Name = this.Material.Text,
+                        Model = this.Model.Text,
+                    });
+                if (materialResult.Count > 0)
+                {
+                    var inputResult = this.sqlHelper.Query<Input>(
+                    new Input()
+                    {
+                        Material = materialResult[0].Identity,
+                        Supplier = this.Supplier.Text,
+                    });
+                    foreach (var item in inputResult)
+                    {
+                        var result = this.sqlHelper.Query<Warehouse>(
+                        new Warehouse()
+                        {
+                            Identity = item.Warehouse,
+                            IsDeleated = false,
+                        }, new List<String>() { "Name" });
+                        if (result.Count > 0)
+                        {
+                            if (this.Warehouse.Items.Contains(result[0].Name) == false)
+                            {
+                                this.Warehouse.Items.Add(result[0].Name);
+                            }
+                        }
+                    }
+                }
+            }
+            this.warehouseText = tempText;
+            this.Warehouse.Text = tempText;
+            this.isWarehouseClear = false;
+        }
+
         private void Count_TextChanged(object sender, TextChangedEventArgs e)
         {
             if (String.IsNullOrEmpty(this.Count.Text) == false)
@@ -203,17 +249,26 @@
         private Boolean InsertOutput(ref Int32 inputIdentity, ref Double materialCount)
         {
             Boolean result = false;
-            var output = new Output()
+            var inputResult = this.sqlHelper.Query<Input>(new Input()
             {
-                Count = materialCount,
-                OutputDate = this.StartDate.SelectedDate != null ?
-                             this.StartDate.SelectedDate?.ToString("yyyy-MM-dd HH-mm-ss:ffffff") :
-                             DateTime.Now.ToString("yyyy-MM-dd HH-mm-ss:ffffff"),                
-                Pickup = this.Pickup.Text,
-                Input = inputIdentity,
-                IsDeleated = false,
-            };
-            result = this.sqlHelper.Insert<Output>(output);
+                Identity = inputIdentity,
+                IsDeleated = false
+            });
+            if (inputResult.Count > 0)
+            {
+                var output = new Output()
+                {
+                    Count = materialCount,
+                    OutputDate = this.StartDate.SelectedDate != null ?
+                                 this.StartDate.SelectedDate?.ToString("yyyy-MM-dd HH-mm-ss:ffffff") :
+                                 DateTime.Now.ToString("yyyy-MM-dd HH-mm-ss:ffffff"),
+                    Pickup = this.Pickup.Text,
+                    Input = inputIdentity,
+                    Warehouse = inputResult[0].Warehouse,
+                    IsDeleated = false,
+                };
+                result = this.sqlHelper.Insert<Output>(output);
+            }
             return result;
         }
 
@@ -221,23 +276,34 @@
         {
             Logger.Info("Func in.");
             List<Int32> result = new List<Int32>();
-            var materialResult = this.sqlHelper.Query<Material>(new Material()
+            if ((String.IsNullOrEmpty(this.Material.Text.Trim()) == false) &&
+               (String.IsNullOrEmpty(this.Model.Text.Trim()) == false) &&
+               (String.IsNullOrEmpty(this.Warehouse.Text.Trim()) == false))
             {
-                Name = this.Material.Text,
-                Model = this.Model.Text,
-            });
-            foreach (var material in materialResult)
-            {
-                Input input = new Input()
+                var materialResult = this.sqlHelper.Query<Material>(new Material()
                 {
-                    Supplier = this.Supplier.Text,
-                    Material = material.Identity,
+                    Name = this.Material.Text,
+                    Model = this.Model.Text,
+                });
+                var warehouseResult = this.sqlHelper.Query<Warehouse>(new Warehouse()
+                {
+                    Name = this.Warehouse.Text,
                     IsDeleated = false,
-                };
-                var inputResult = this.sqlHelper.Query<Input>(input);
-                foreach (var item in inputResult)
+                });
+                foreach (var material in materialResult)
                 {
-                    result.Add(item.Identity);
+                    Input input = new Input()
+                    {
+                        Supplier = this.Supplier.Text,
+                        Material = material.Identity,
+                        IsDeleated = false,
+                        Warehouse = warehouseResult.Count > 0 ? warehouseResult[0].Identity : -1,
+                    };
+                    var inputResult = this.sqlHelper.Query<Input>(input);
+                    foreach (var item in inputResult)
+                    {
+                        result.Add(item.Identity);
+                    }
                 }
             }
             Logger.Info("Func out.");
@@ -289,11 +355,13 @@
         {
             this.Material.Text = String.Empty;
             this.Model.Text = String.Empty;
+            this.Warehouse.Text = String.Empty;
         }
 
         private void Initial()
         {
             this.SetMaterialEvent();
+            this.SetWarehouseEvent();
             this.timer.Elapsed += delegate
             {
                 this.MaxCountVisiblity = Visibility.Hidden;
@@ -323,11 +391,32 @@
             }
         }
 
+        private void SetWarehouseEvent()
+        {
+            var warehouseContent = (TextBox)this.Warehouse.Template.FindName("ComboBoxContent", this.Warehouse);
+            if (warehouseContent != null)
+            {
+                warehouseContent.TextChanged += delegate (object sender, TextChangedEventArgs e)
+                {
+                    var text = (TextBox)sender;
+                    if (this.isWarehouseClear == false)
+                    {
+                        if (this.warehouseText != text.Text)
+                        {
+                            this.warehouseText = text.Text;
+                        }
+                    }
+                    this.isWarehouseClear = false;
+                };
+            }
+        }
+
         private Boolean Validate()
         {
             return (String.IsNullOrEmpty(this.Supplier.Text) == false) &&
                    (String.IsNullOrEmpty(this.Material.Text) == false) &&
                    (String.IsNullOrEmpty(this.Model.Text) == false) &&
+                   (String.IsNullOrEmpty(this.Warehouse.Text) == false) &&
                    (String.IsNullOrEmpty(this.Pickup.Text) == false) &&
                    (String.IsNullOrEmpty(this.Count.Text) == false);
         }
@@ -352,6 +441,9 @@
         private SQLHelper sqlHelper = SQLHelper.GetInstance();
         private Boolean isMaterialClear = false;
         private String materialText = String.Empty;
+        private Boolean isWarehouseClear = false;
+        private String warehouseText = String.Empty;
+
         private Timer timer = new Timer(100);
         private MainWindow mainWindow;
         #endregion
@@ -363,6 +455,7 @@
             result.Append("出库时间: ").Append(this.StartDate.SelectedDate?.ToShortDateString()).Append(Environment.NewLine);
             result.Append("出库类别: ").Append(this.Supplier.Text).Append(Environment.NewLine);
             result.Append("出库材料: ").Append(this.Material.Text).Append(Environment.NewLine);
+            result.Append("仓库名称: ").Append(this.Warehouse.Text).Append(Environment.NewLine);
             result.Append("材料规格: ").Append(this.Model.Text).Append(Environment.NewLine);
             result.Append("出库数量: ").Append(this.Count.Text).Append(Environment.NewLine);
             result.Append("取货人: ").Append(this.Pickup.Text).Append(Environment.NewLine);
